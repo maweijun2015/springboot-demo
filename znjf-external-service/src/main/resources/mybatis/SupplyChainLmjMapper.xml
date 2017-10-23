@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znjf33.external.api.provider.mapper.SupplyChainLmjMapper">
+
+
+    <select id="getZnjfExternalUserByUserIdAndUuid" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+        select ext_user_id as extUserId, user_id as userId from znjf_external_user z where z.ext_user_id=#{userId,jdbcType=DECIMAL}
+        and z.loan_app_uuid=#{loanAppUuid,jdbcType=VARCHAR}
+        and z.ext_user_type=1002 and z.ext_platform = 3000
+    </select>
+
+
+    <select id="countUserByUserInfo" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+        select count(1) from rd_user where user_id = #{userId,jdbcType=DECIMAL}
+    </select>
+
+    <select id="getCreditAmountByUserId" resultType="java.lang.Float">
+        select r.credit_amount as creditAmount from rd_user_cache r where r.user_id=#{userId,jdbcType=DECIMAL}
+    </select>
+
+    <!-- 保存支用申请主信息 -->
+    <insert id="saveApplyLoan" parameterType="com.znjf33.external.api.provider.domain.SupplyChainLmjParamDO">
+        insert into znjf_fund (
+	    deal_no,order_no,amount,amount_applied,days_applied,buyer_id,fund_status,
+	    money_status,process_status,repayment_date_applied,add_time,consignee,consignee_phone,
+	    consignee_address,loan_draw_time,channel_from)
+	    VALUES (
+          #{dealNo,jdbcType=VARCHAR},
+          #{loanDrawUuid,jdbcType=VARCHAR},
+          #{drawAmount,jdbcType=DECIMAL},
+          #{drawAmount,jdbcType=DECIMAL},
+          #{duration,jdbcType=DECIMAL},
+          #{userId,jdbcType=DECIMAL},
+          #{fundStatus,jdbcType=DECIMAL},
+          #{moneyStatus,jdbcType=DECIMAL},
+          #{processStatus,jdbcType=DECIMAL},
+          #{repaymentDateApplied,jdbcType=TIMESTAMP},
+          now(),
+          #{consignee,jdbcType=VARCHAR},
+          #{consigneePhone,jdbcType=VARCHAR},
+          #{consigneeAddress,jdbcType=VARCHAR},
+          #{loanDrawDate,jdbcType=TIMESTAMP},
+          #{channelFrom,jdbcType=DECIMAL}
+	    )
+    </insert>
+
+
+    <!-- 保存支用申请附表信息-->
+    <insert id="saveApplyLoanAttachment" parameterType="java.util.List" useGeneratedKeys="false">
+        insert into znjf_fund_attachment(
+        deal_no,
+        order_no,
+        goods_name,
+        goods_number,
+        add_time
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.dealNo,jdbcType=VARCHAR},
+            #{item.orderNo,jdbcType=VARCHAR},
+            #{item.goodsName,jdbcType=VARCHAR},
+            #{item.goodsNumber,jdbcType=DECIMAL},
+            now()
+            )
+        </foreach>
+    </insert>
+
+    <select id="getUsedCreditAmount" resultType="java.lang.Float">
+        select IFNULL(sum(amount_applied),0) from znjf_fund where channel_from = 1 and money_status=0 and buyer_id = #{userId,jdbcType=DECIMAL}
+    </select>
+
+    <select id="getZnjfFundByUserId" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+        select r.borrow_id as borrowId,f.id as fundId from znjf_fund f
+        inner join znjf_fund_borrow_rel r on r.fund_id = f.id
+        where f.channel_from = 1 and f.money_status=0 and f.buyer_id = #{userId,jdbcType=DECIMAL}
+    </select>
+
+    <select id="getUserInfo" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+      select u.user_id as userId, u.mobile_phone as mobilePhone from znjf_external_user e
+      inner join rd_user u on u.user_id = e.user_id
+      where e.loan_app_uuid = #{loanAppUuid,jdbcType=VARCHAR}
+      and e.ext_user_type = 1002 and e.ext_platform = 3000 and e.review_status = 1001
+    </select>
+
+    <select id="getFundExist" resultType="java.lang.Integer">
+        select count(1) from znjf_fund where order_no = #{loanDrawUuid,jdbcType=VARCHAR} and buyer_id = #{userId,jdbcType=DECIMAL}
+        and channel_from  = 1
+    </select>
+
+    <update id="updateBorrowRepayment">
+        update rd_borrow_repayment r
+        set r.status = 3
+        where user_id = #{userId,jdbcType=DECIMAL}
+        and borrow_id = #{borrowId,jdbcType=DECIMAL}
+    </update>
+
+    <update id="updateZnjfFundStatus">
+        update znjf_fund
+        set fund_status = #{fundStatus,jdbcType=DECIMAL},
+        repayment_date_applied = now()
+        where user_id = #{userId,jdbcType=DECIMAL}
+        and order_no = #{loanDrawUuid,jdbcType=VARCHAR}
+    </update>
+</mapper>
