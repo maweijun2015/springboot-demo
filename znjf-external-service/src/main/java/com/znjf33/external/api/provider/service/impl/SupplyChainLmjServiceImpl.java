@@ -130,7 +130,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
 
             //生成的文件路径
             srcFile = loanProtocol.getInPdfName();
-
+            LOGGER.info("user_id="+supplyChainLmjParamDTO.getUserId());
             userResult = userSignatureService.userDoSignature(supplyChainLmjParamDTO.getUserId(), "乙方（电子签章）:", srcFile);
             if(StringUtil.isNotBlank(userResult)){
                 platformResult = userSignatureService.platformDoSignature("丙方（电子签章）:", userResult);
