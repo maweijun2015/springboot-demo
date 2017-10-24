@@ -80,8 +80,9 @@
     </select>
 
     <select id="getUserInfo" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
-      select u.user_id as userId, u.mobile_phone as mobilePhone from znjf_external_user e
-      inner join rd_user u on u.user_id = e.user_id
+      select u.user_id as userId, r.mobile_phone as mobilePhone from znjf_external_user e
+      inner join rd_user_cache u on u.user_id = e.user_id
+      inner join rd_user r on r.user_id = u.org_operator
       where e.loan_app_uuid=#{loanAppUuid,jdbcType=VARCHAR}
       and e.ext_user_type = 1002 and e.ext_platform = 3000 and e.review_status = 1001
     </select>
