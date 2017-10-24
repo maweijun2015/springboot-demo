@@ -102,7 +102,7 @@
         update znjf_fund
         set fund_status = #{fundStatus,jdbcType=DECIMAL},
         repayment_date_applied = now()
-        where user_id = #{userId,jdbcType=DECIMAL}
+        where buyer_id = #{userId,jdbcType=DECIMAL}
         and order_no = #{loanDrawUuid,jdbcType=VARCHAR}
     </update>
 </mapper>
