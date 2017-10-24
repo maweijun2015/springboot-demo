@@ -34,6 +34,10 @@
 			<artifactId>znjf-general-api</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.znjf33</groupId>
+			<artifactId>znjf-investment-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>

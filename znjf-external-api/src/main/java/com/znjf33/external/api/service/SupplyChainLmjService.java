@@ -20,11 +20,10 @@ public interface SupplyChainLmjService {
 
     /**
      * E签宝签约
-     * @param userId
-     * @param imageServerUrl
+     * @param supplyChainLmjParamDTO
      * @return
      */
-    boolean signatureFileForLmj(int userId, String imageServerUrl);
+    boolean signatureFileForLmj(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
     /**
      * 请求是否合规
      * @return

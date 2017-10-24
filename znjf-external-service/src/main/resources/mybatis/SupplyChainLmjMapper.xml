@@ -9,8 +9,11 @@
         and z.ext_user_type=1002 and z.ext_platform = 3000
     </select>
 
+    <select id="getZnjfFundForSame" resultType="java.lang.Integer">
+        select count(1) from znjf_fund z where z.order_no=#{loanDrawUuid,jdbcType=VARCHAR}
+    </select>
 
-    <select id="countUserByUserInfo" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+    <select id="countUserByUserInfo" resultType="java.lang.Integer">
         select count(1) from rd_user where user_id = #{userId,jdbcType=DECIMAL}
     </select>
 
@@ -79,7 +82,7 @@
     <select id="getUserInfo" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
       select u.user_id as userId, u.mobile_phone as mobilePhone from znjf_external_user e
       inner join rd_user u on u.user_id = e.user_id
-      where e.loan_app_uuid = #{loanAppUuid,jdbcType=VARCHAR}
+      where e.loan_app_uuid=#{loanAppUuid,jdbcType=VARCHAR}
       and e.ext_user_type = 1002 and e.ext_platform = 3000 and e.review_status = 1001
     </select>
 

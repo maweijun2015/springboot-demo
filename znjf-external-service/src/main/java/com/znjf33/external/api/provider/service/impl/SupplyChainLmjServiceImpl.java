@@ -17,8 +17,6 @@ import com.znjf33.common.utils.HclientFileUtil;
 import com.znjf33.common.utils.OrderNoUtils;
 import com.znjf33.common.utils.StringUtil;
 import com.znjf33.common.utils.constant.enums.EnumUploadImgType;
-import com.znjf33.general.api.dto.ProtocolDto;
-import com.znjf33.general.api.service.ProtocolService;
 import com.znjf33.useraccount.api.dto.UserSignatureDto;
 import com.znjf33.useraccount.api.service.UserSignatureService;
 import org.slf4j.Logger;
@@ -50,9 +48,6 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
     private UserSignatureService userSignatureService;
 
     @Autowired
-    private ProtocolService protocolService;
-
-    @Autowired
     private LoanProtocol loanProtocol;
 
     /**
@@ -71,6 +66,11 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfExternalUserByUserIdAndUuid(supplyChainLmjParamDO.getMemberId(),
                 supplyChainLmjParamDO.getLoanAppUuid());
         if (supplyChainLmjResultDO == null) {
+            supplyChainLmjResultDTO.setCode(OpenMessage.ERROR_LINES_REFUSED_APPLY.code());
+            return supplyChainLmjResultDTO;
+        }
+        Integer znjfFundForSame = supplyChainLmjMapper.getZnjfFundForSame(supplyChainLmjParamDO.getLoanDrawUuid());
+        if (znjfFundForSame > 0){
             supplyChainLmjResultDTO.setCode(OpenMessage.ERROR_LINES_REFUSED_APPLY.code());
             return supplyChainLmjResultDTO;
         }
@@ -113,12 +113,11 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
 
     /**
      * E签宝签约
-     * @param userId
-     * @param imageServerUrl
+     * @param supplyChainLmjParamDTO
      * @return
      */
     @Override
-    public boolean signatureFileForLmj(int userId,String imageServerUrl){
+    public boolean signatureFileForLmj(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
         String srcFile="";
         String userResult="";
         String platformResult = "";
@@ -127,22 +126,21 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             LOGGER.info("************电子签名开始******************");
 
             //根据模板生产协议文件
-            ProtocolDto protocolDto = protocolService.getProtocolByNid("base_for_loan_agreement");
-            loanProtocol.executor(null,0,protocolDto.getContent(),userId);
+            loanProtocol.executor(supplyChainLmjParamDTO,supplyChainLmjParamDTO.getContent());
 
             //生成的文件路径
             srcFile = loanProtocol.getInPdfName();
 
-            userResult = userSignatureService.userDoSignature(userId, "乙方（电子签章）：", srcFile);
+            userResult = userSignatureService.userDoSignature(supplyChainLmjParamDTO.getUserId(), "乙方（电子签章）:", srcFile);
             if(StringUtil.isNotBlank(userResult)){
                 platformResult = userSignatureService.platformDoSignature("丙方（电子签章）:", userResult);
 
                 if(StringUtil.isNotBlank(platformResult)){
-                    signResult = HclientFileUtil.uploadFileMethod(imageServerUrl + HclientFileUtil.UPLOAD_PATH,
+                    signResult = HclientFileUtil.uploadFileMethod(supplyChainLmjParamDTO.getImageServerUrl() + HclientFileUtil.UPLOAD_PATH,
                                 EnumUploadImgType.USERINFO.getValue(), new File(platformResult));
 
-                    UserSignatureDto borrowerUserSign = userSignatureService.getUserSignatureInfo(userId);
-                    userSignatureService.saveSignedFile(platformResult, "借款协议-" + userId,
+                    UserSignatureDto borrowerUserSign = userSignatureService.getUserSignatureInfo(supplyChainLmjParamDTO.getUserId());
+                    userSignatureService.saveSignedFile(platformResult, "借款协议-" + supplyChainLmjParamDTO.getUserId(),
                                 new String[]{borrowerUserSign.getAccountId()});
                     LOGGER.info("************电子签名结束******************");
                 }
@@ -196,13 +194,6 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         supplyChainLmjMapper.updateBorrowRepayment(supplyChainLmjResultDO.getUserId(),supplyChainLmjResultDO.getBorrowId());
         supplyChainLmjMapper.updateZnjfFundStatus(supplyChainLmjResultDO.getUserId(),supplyChainLmjReimbursementParamDTO.getLoanDrawUuid(),
                 TableConstants.MONEY_STATUS_REPAYING);
-    }
-
-    private String handleFileName(String dstFile, String suffix) {
-        String path = ContextLoader.getCurrentWebApplicationContext().getServletContext()
-                .getRealPath("/");
-        path = path + "data/signature/泰安1号借款协议-" + dstFile + suffix;
-        return path;
     }
 
 

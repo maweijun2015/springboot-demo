@@ -8,11 +8,8 @@
     <dubbo:consumer check="false"/>
 
     <!-- 服务消费者接口 -->
-    <dubbo:reference interface="com.znjf33.general.api.service.SystemConfigService" id="systemConfigService"  retries="0"/>
-    <dubbo:reference interface="com.znjf33.general.api.service.ProtocolService" id="protocolService" retries="0"  timeout="8000"/>
     <dubbo:reference interface="com.znjf33.useraccount.api.service.UserSignatureService" id="userSignatureService" retries="0"  timeout="8000"/>
-    <dubbo:reference interface="com.znjf33.useraccount.api.service.UserService" id="userService" retries="0"  timeout="8000"/>
 
     <!-- 声明需要暴露的服务接口 -->
-    <dubbo:service interface="com.znjf33.external.api.service.SupplyChainLmjService" ref="supplyChainLmjServiceImpl" retries="0" timeout="8000" owner="mwj"/>
+    <dubbo:service interface="com.znjf33.external.api.service.SupplyChainLmjService" ref="supplyChainLmjServiceImpl" retries="0" timeout="80000" owner="mwj"/>
 </beans>

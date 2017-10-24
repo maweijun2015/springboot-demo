@@ -24,6 +24,7 @@ public interface SupplyChainLmjMapper {
     SupplyChainLmjResultDO getZnjfFundByUserId(@Param("userId") Integer userId);
     SupplyChainLmjResultDO getUserInfo(@Param("loanAppUuid") String loanAppUuid);
     Integer getFundExist(@Param("userId") Integer userId, @Param("loanDrawUuid") String loanDrawUuid);
+    Integer getZnjfFundForSame(@Param("loanDrawUuid") String loanDrawUuid);
     void updateBorrowRepayment(@Param("userId") Integer userId, @Param("borrowId") Long borrowId);
     void updateZnjfFundStatus(@Param("userId") Integer userId, @Param("loanDrawUuid") String loanDrawUuid, @Param("fundStatus") Integer fundStatus);
 }

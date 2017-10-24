@@ -19,9 +19,21 @@ public class SupplyChainLmjParamDTO implements Serializable {
      */
     private String loanDrawUuid;
     /**
+     * 上传下载地址
+     */
+    private String realPath;
+    /**
+     * 根据模板生产协议文件
+     */
+    private String content;
+    /**
      * 支用申请时间
      */
     private String loanDrawDate;
+    /**
+     * 图片服务路径
+     */
+    private String imageServerUrl;
     /**
      * 借款天数
      */
@@ -30,6 +42,10 @@ public class SupplyChainLmjParamDTO implements Serializable {
      * 客户编号
      */
     private Integer memberId;
+    /**
+     * 用户id
+     */
+    private Integer userId;
     /**
      * 客户姓名
      */
@@ -62,6 +78,148 @@ public class SupplyChainLmjParamDTO implements Serializable {
      * 订单信息
      */
     private List<OrderinfoDTO> orderinfoDTO;
+    /**
+     * 借款人姓名/企业名称
+     */
+    private String loanUserRealName;
+    /**
+     * 合同编号
+     */
+    private String agreementNo;
+    /**
+     * 借款人法人姓名
+     */
+    private String loanLegalUserName;
+    /**
+     * 借款金额
+     */
+    private Double loanAmount;
+    /**
+     * 借款利率
+     */
+    private Double loanApr;
+    /**
+     * 借款开始日期
+     */
+    private String loanStartDate;
+    /**
+     * 还款日期
+     */
+    private String loanEndDate;
+    /**
+     * 借款用途
+     */
+    private String loanUse;
+
+    /**
+     * 签署日期
+     */
+    private String signDate;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getRealPath() {
+        return realPath;
+    }
+
+    public void setRealPath(String realPath) {
+        this.realPath = realPath;
+    }
+
+    public Double getLoanAmount() {
+        return loanAmount;
+    }
+
+    public void setLoanAmount(Double loanAmount) {
+        this.loanAmount = loanAmount;
+    }
+
+    public Double getLoanApr() {
+        return loanApr;
+    }
+
+    public void setLoanApr(Double loanApr) {
+        this.loanApr = loanApr;
+    }
+
+    public String getAgreementNo() {
+        return agreementNo;
+    }
+
+    public void setAgreementNo(String agreementNo) {
+        this.agreementNo = agreementNo;
+    }
+
+    public String getImageServerUrl() {
+        return imageServerUrl;
+    }
+
+    public void setImageServerUrl(String imageServerUrl) {
+        this.imageServerUrl = imageServerUrl;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getLoanUserRealName() {
+        return loanUserRealName;
+    }
+
+    public void setLoanUserRealName(String loanUserRealName) {
+        this.loanUserRealName = loanUserRealName;
+    }
+
+    public String getLoanLegalUserName() {
+        return loanLegalUserName;
+    }
+
+    public void setLoanLegalUserName(String loanLegalUserName) {
+        this.loanLegalUserName = loanLegalUserName;
+    }
+
+    public String getLoanStartDate() {
+        return loanStartDate;
+    }
+
+    public void setLoanStartDate(String loanStartDate) {
+        this.loanStartDate = loanStartDate;
+    }
+
+    public String getLoanEndDate() {
+        return loanEndDate;
+    }
+
+    public void setLoanEndDate(String loanEndDate) {
+        this.loanEndDate = loanEndDate;
+    }
+
+
+    public String getLoanUse() {
+        return loanUse;
+    }
+
+    public void setLoanUse(String loanUse) {
+        this.loanUse = loanUse;
+    }
+
+    public String getSignDate() {
+        return signDate;
+    }
+
+    public void setSignDate(String signDate) {
+        this.signDate = signDate;
+    }
 
     public Integer getDuration() {
         return duration;
