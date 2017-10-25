@@ -191,7 +191,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         LOGGER.info("还款登记信息");
         SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getUserInfo(supplyChainLmjReimbursementParamDTO.getLoanAppUuid());
         Integer userId = supplyChainLmjResultDO.getUserId();
-        supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfFundByUserId(userId);
+        supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfFundByUserId(userId,supplyChainLmjReimbursementParamDTO.getLoanDrawUuid());
         supplyChainLmjMapper.updateBorrowRepayment(userId,supplyChainLmjResultDO.getBorrowId());
         supplyChainLmjMapper.updateZnjfFundStatus(userId,supplyChainLmjReimbursementParamDTO.getLoanDrawUuid(),
                 TableConstants.MONEY_STATUS_REPAYING);
