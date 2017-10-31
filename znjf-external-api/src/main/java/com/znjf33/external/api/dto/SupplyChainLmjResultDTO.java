@@ -21,6 +21,30 @@ public class SupplyChainLmjResultDTO implements Serializable {
      * 手机号
      */
     private String mobilePhone;
+    /**
+     * 真实姓名
+     */
+    private String realName;
+    /**
+     * 法人代表姓名
+     */
+    private String frdbName;
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getFrdbName() {
+        return frdbName;
+    }
+
+    public void setFrdbName(String frdbName) {
+        this.frdbName = frdbName;
+    }
 
     public String getMobilePhone() {
         return mobilePhone;

@@ -176,8 +176,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         if (fundExist <= 0){
             return null;
         }
-        supplyChainLmjResultDTO.setUserId(supplyChainLmjResultDO.getUserId());
-        supplyChainLmjResultDTO.setMobilePhone(supplyChainLmjResultDO.getMobilePhone());
+        getUserInfoDoToDto(supplyChainLmjResultDTO,supplyChainLmjResultDO);
         return supplyChainLmjResultDTO;
     }
 
@@ -231,7 +230,13 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         supplyChainLmjParamDO.setDuration(supplyChainLmjParamDTO.getDuration());
     }
 
-
+    private void getUserInfoDoToDto(SupplyChainLmjResultDTO supplyChainLmjResultDTO,
+                                    SupplyChainLmjResultDO supplyChainLmjResultDO){
+        supplyChainLmjResultDTO.setUserId(supplyChainLmjResultDO.getUserId());
+        supplyChainLmjResultDTO.setMobilePhone(supplyChainLmjResultDO.getMobilePhone());
+        supplyChainLmjResultDTO.setFrdbName(supplyChainLmjResultDO.getFrdbName());
+        supplyChainLmjResultDTO.setRealName(supplyChainLmjResultDO.getRealName());
+    }
 
 
 
