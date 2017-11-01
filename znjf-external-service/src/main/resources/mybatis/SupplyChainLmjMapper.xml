@@ -100,11 +100,34 @@
         and borrow_id = #{borrowId,jdbcType=DECIMAL}
     </update>
 
-    <update id="updateZnjfFundStatus">
+    <update id="updateZnjfFundRepayStatus">
         update znjf_fund
         set fund_status = #{fundStatus,jdbcType=DECIMAL},
         repayment_date_applied = now()
         where buyer_id = #{userId,jdbcType=DECIMAL}
         and order_no = #{loanDrawUuid,jdbcType=VARCHAR}
     </update>
+
+    <update id="updateZnjfFundStatus">
+        update znjf_fund
+        set fund_status = #{fundStatus,jdbcType=DECIMAL}
+        where buyer_id = #{userId,jdbcType=DECIMAL}
+        and order_no = #{loanDrawUuid,jdbcType=VARCHAR}
+        AND channel_from = #{channelFrom, jdbcType=DECIMAL}
+    </update>
+
+    <select id="countFundsToday" resultType="java.lang.Integer">
+        SELECT count(1) FROM znjf_fund f
+        WHERE f.buyer_id = #{userId, jdbcType=DECIMAL}
+        AND f.channel_from = #{channelFrom, jdbcType=DECIMAL}
+        AND f.add_time &gt;= #{startTime, jdbcType=TIMESTAMP}
+        AND f.fund_status = #{fundStatus,jdbcType=DECIMAL}
+    </select>
+
+    <select id="getZnfFundByOrderNo"  resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+        SELECT f.amount_applied as amountApplied , f.duration as duration FROM znjf_fund f
+        WHERE f.buyer_id = #{userId, jdbcType=DECIMAL}
+        AND f.channel_from = #{channelFrom, jdbcType=DECIMAL}
+        AND f.order_no = #{loanDrawUuid,jdbcType=VARCHAR}
+    </select>
 </mapper>

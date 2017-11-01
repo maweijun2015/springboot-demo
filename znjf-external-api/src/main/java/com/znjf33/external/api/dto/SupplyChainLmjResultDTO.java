@@ -29,6 +29,42 @@ public class SupplyChainLmjResultDTO implements Serializable {
      * 法人代表姓名
      */
     private String frdbName;
+    /**
+     * 今日签约数
+     */
+    private Integer countFundsToday;
+    /**
+     * 垫资金额
+     */
+    private Double amountApplied;
+    /**
+     * 借款天数
+     */
+    private Integer duration;
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public Double getAmountApplied() {
+        return amountApplied;
+    }
+
+    public void setAmountApplied(Double amountApplied) {
+        this.amountApplied = amountApplied;
+    }
+
+    public Integer getCountFundsToday() {
+        return countFundsToday;
+    }
+
+    public void setCountFundsToday(Integer countFundsToday) {
+        this.countFundsToday = countFundsToday;
+    }
 
     public String getRealName() {
         return realName;

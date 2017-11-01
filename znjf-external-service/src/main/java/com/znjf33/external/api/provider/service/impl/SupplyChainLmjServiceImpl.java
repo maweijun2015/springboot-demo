@@ -19,6 +19,7 @@ import com.znjf33.common.utils.StringUtil;
 import com.znjf33.common.utils.constant.enums.EnumUploadImgType;
 import com.znjf33.useraccount.api.dto.UserSignatureDto;
 import com.znjf33.useraccount.api.service.UserSignatureService;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import org.springframework.web.context.ContextLoader;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -167,6 +169,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
      */
     @Override
     public SupplyChainLmjResultDTO getUserInfo(String loanAppUuid, String loanDrawUuid) {
+        LOGGER.info("************获取用户信息******************");
         SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
         SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getUserInfo(loanAppUuid);
         if (supplyChainLmjResultDO == null){
@@ -181,6 +184,37 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
     }
 
     /**
+     * 获取标的信息
+     * @return
+     */
+    @Override
+    public SupplyChainLmjResultDTO getBorrowInfo(Integer userId,String loanDrawUuid) {
+        LOGGER.info("************获取标的信息******************");
+        SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
+        Integer countFundsToday = supplyChainLmjMapper.countFundsToday(userId,TableConstants.znjf_fund_data_from_lmj,
+                DateUtil.getDayStartTime(DateUtil.getNow().getTime()),TableConstants.MONEY_STATUS_PAY);
+        supplyChainLmjResultDTO.setCountFundsToday(countFundsToday);
+        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnfFundByOrderNo(userId,TableConstants.znjf_fund_data_from_lmj,loanDrawUuid);
+        if (supplyChainLmjResultDO == null){
+            return null;
+        }
+        supplyChainLmjResultDTO.setAmountApplied(supplyChainLmjResultDO.getAmountApplied());
+        supplyChainLmjResultDTO.setDuration(supplyChainLmjResultDO.getDuration());
+        return supplyChainLmjResultDTO;
+    }
+
+    /**
+     * 更新fund表状态
+     * @return
+     */
+    @Override
+    public void updateZnjfFundStatus(Integer userId,String loanDrawUuid) {
+        LOGGER.info("************更新fund表状态******************");
+        supplyChainLmjMapper.updateZnjfFundStatus(userId,loanDrawUuid,TableConstants.MONEY_STATUS_PAY,
+                TableConstants.znjf_fund_data_from_lmj);
+    }
+
+    /**
      * 还款登记信息
      * @return
      */
@@ -192,7 +226,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         Integer userId = supplyChainLmjResultDO.getUserId();
         supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfFundByUserId(userId,supplyChainLmjReimbursementParamDTO.getLoanDrawUuid());
         supplyChainLmjMapper.updateBorrowRepayment(userId,supplyChainLmjResultDO.getBorrowId());
-        supplyChainLmjMapper.updateZnjfFundStatus(userId,supplyChainLmjReimbursementParamDTO.getLoanDrawUuid(),
+        supplyChainLmjMapper.updateZnjfFundRepayStatus(userId,supplyChainLmjReimbursementParamDTO.getLoanDrawUuid(),
                 TableConstants.MONEY_STATUS_REPAYING);
     }
 

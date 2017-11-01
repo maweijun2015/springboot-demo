@@ -37,9 +37,33 @@ public class SupplyChainLmjResultDO {
      */
     private Integer userId;
     /**
+     * 借款天数
+     */
+    private Integer duration;
+    /**
      * 信用额度
      */
     private Float creditAmount;
+    /**
+     * 垫资金额
+     */
+    private Double amountApplied;
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public Double getAmountApplied() {
+        return amountApplied;
+    }
+
+    public void setAmountApplied(Double amountApplied) {
+        this.amountApplied = amountApplied;
+    }
 
     public String getRealName() {
         return realName;
