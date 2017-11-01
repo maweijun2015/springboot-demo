@@ -24,7 +24,7 @@
     <!-- 保存支用申请主信息 -->
     <insert id="saveApplyLoan" parameterType="com.znjf33.external.api.provider.domain.SupplyChainLmjParamDO">
         insert into znjf_fund (
-	    deal_no,order_no,amount,amount_applied,days_applied,buyer_id,fund_status,
+	    deal_no,order_no,amount,amount_applied,days_applied,duration,buyer_id,fund_status,
 	    money_status,process_status,repayment_date_applied,add_time,consignee,consignee_phone,
 	    consignee_address,loan_draw_time,channel_from)
 	    VALUES (
@@ -32,6 +32,7 @@
           #{loanDrawUuid,jdbcType=VARCHAR},
           #{drawAmount,jdbcType=DECIMAL},
           #{drawAmount,jdbcType=DECIMAL},
+          0,
           #{duration,jdbcType=DECIMAL},
           #{userId,jdbcType=DECIMAL},
           #{fundStatus,jdbcType=DECIMAL},
