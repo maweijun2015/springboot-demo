@@ -1,5 +1,16 @@
 package com.znjf33.external.api.provider.service.impl;
 
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.znjf33.common.service.common.OpenMessage;
+import com.znjf33.common.utils.DateUtil;
+import com.znjf33.common.utils.HclientFileUtil;
+import com.znjf33.common.utils.OrderNoUtils;
+import com.znjf33.common.utils.StringUtil;
+import com.znjf33.common.utils.constant.enums.EnumUploadImgType;
 import com.znjf33.external.api.dto.OrderinfoDTO;
 import com.znjf33.external.api.dto.SupplyChainLmjParamDTO;
 import com.znjf33.external.api.dto.SupplyChainLmjReimbursementParamDTO;
@@ -11,27 +22,14 @@ import com.znjf33.external.api.provider.domain.ZnjfFundAttachmentDO;
 import com.znjf33.external.api.provider.mapper.SupplyChainLmjMapper;
 import com.znjf33.external.api.provider.protocol.LoanProtocol;
 import com.znjf33.external.api.service.SupplyChainLmjService;
-import com.znjf33.common.service.common.OpenMessage;
-import com.znjf33.common.utils.DateUtil;
-import com.znjf33.common.utils.HclientFileUtil;
-import com.znjf33.common.utils.OrderNoUtils;
-import com.znjf33.common.utils.StringUtil;
-import com.znjf33.common.utils.constant.enums.EnumUploadImgType;
 import com.znjf33.useraccount.api.dto.UserSignatureDto;
 import com.znjf33.useraccount.api.service.UserSignatureService;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.ContextLoader;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -109,7 +107,9 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         //支用申请附件信息录入
         List<ZnjfFundAttachmentDO> znjfFundAttachmentDOList = listZnjfFundAttachment(supplyChainLmjParamDTO.getOrderinfoDTO(),
                 supplyChainLmjParamDO);
-        supplyChainLmjMapper.saveApplyLoanAttachment(znjfFundAttachmentDOList);
+        if(znjfFundAttachmentDOList !=null){
+            supplyChainLmjMapper.saveApplyLoanAttachment(znjfFundAttachmentDOList);
+        }
         return supplyChainLmjResultDTO;
     }
 
