@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.znjf33.common.service.common.OpenMessage;
+import com.znjf33.common.service.common.Message;
 import com.znjf33.common.utils.DateUtil;
 import com.znjf33.common.utils.HclientFileUtil;
 import com.znjf33.common.utils.OrderNoUtils;
@@ -66,19 +66,19 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfExternalUserByUserIdAndUuid(supplyChainLmjParamDO.getMemberId(),
                 supplyChainLmjParamDO.getLoanAppUuid());
         if (supplyChainLmjResultDO == null) {
-            supplyChainLmjResultDTO.setCode(OpenMessage.ERROR_LINES_REFUSED_APPLY.code());
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_REFUSED_APPLY.code());
             return supplyChainLmjResultDTO;
         }
         Integer znjfFundForSame = supplyChainLmjMapper.getZnjfFundForSame(supplyChainLmjParamDO.getLoanDrawUuid());
         if (znjfFundForSame > 0){
-            supplyChainLmjResultDTO.setCode(OpenMessage.ERROR_LINES_REFUSED_APPLY.code());
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_REFUSED_APPLY.code());
             return supplyChainLmjResultDTO;
         }
         supplyChainLmjParamDO.setUserId(supplyChainLmjResultDO.getUserId());
 
         Integer userCount = supplyChainLmjMapper.countUserByUserInfo(supplyChainLmjResultDO.getUserId());
         if (userCount <= 0){
-            supplyChainLmjResultDTO.setCode(OpenMessage.ERROR_LINES_REFUSED_APPLY.code());
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_REFUSED_APPLY.code());
             return supplyChainLmjResultDTO;
         }
 
@@ -92,7 +92,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         BigDecimal remainingCreditAmount = creditAmountBig.subtract(usedCreditAmountBig);
 
         if (remainingCreditAmount.floatValue() <  supplyChainLmjParamDO.getDrawAmount()){
-            supplyChainLmjResultDTO.setCode(OpenMessage.ERROR_LINES_NO_MATCHING.code());
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_NO_MATCHING.code());
             return supplyChainLmjResultDTO;
         }
         //支用申请信息录入
