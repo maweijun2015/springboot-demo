@@ -218,14 +218,15 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
      * 还款登记信息
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor = Throwable.class)
     @Override
     public void getReimbursementRegistration(SupplyChainLmjReimbursementParamDTO supplyChainLmjReimbursementParamDTO) {
         LOGGER.info("还款登记信息");
         SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getUserInfo(supplyChainLmjReimbursementParamDTO.getLoanAppUuid());
         Integer userId = supplyChainLmjResultDO.getUserId();
         supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfFundByUserId(userId,supplyChainLmjReimbursementParamDTO.getLoanDrawUuid());
-        supplyChainLmjMapper.updateBorrowRepayment(userId,supplyChainLmjResultDO.getBorrowId());
+        String number = supplyChainLmjReimbursementParamDTO.getRepaymentDataDTOList().get(0).getNumber();
+        supplyChainLmjMapper.updateBorrowRepayment(userId,supplyChainLmjResultDO.getBorrowId(),number);
         supplyChainLmjMapper.updateZnjfFundRepayStatus(userId,supplyChainLmjReimbursementParamDTO.getLoanDrawUuid(),
                 TableConstants.MONEY_STATUS_REPAYING);
     }
