@@ -99,7 +99,7 @@
         set r.status = 3
         where user_id = #{userId,jdbcType=DECIMAL}
         and borrow_id = #{borrowId,jdbcType=DECIMAL}
-        and repayment_no = #{reapymentNo,jdbcType=VARCHAR}
+        and repayment_no = #{repaymentNo,jdbcType=VARCHAR}
     </update>
 
     <update id="updateZnjfFundRepayStatus">
