@@ -192,7 +192,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         LOGGER.info("************获取标的信息******************");
         SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
         Integer countFundsToday = supplyChainLmjMapper.countFundsToday(userId,TableConstants.znjf_fund_data_from_lmj,
-                DateUtil.getDayStartTime(DateUtil.getNow().getTime()),TableConstants.MONEY_STATUS_PAY);
+                TableConstants.MONEY_STATUS_PAY);
         supplyChainLmjResultDTO.setCountFundsToday(countFundsToday);
         SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnfFundByOrderNo(userId,TableConstants.znjf_fund_data_from_lmj,loanDrawUuid);
         if (supplyChainLmjResultDO == null){
