@@ -122,7 +122,7 @@
         SELECT count(1) FROM znjf_fund f
         WHERE f.buyer_id = #{userId, jdbcType=DECIMAL}
         AND f.channel_from = #{channelFrom, jdbcType=DECIMAL}
-        AND f.add_time &gt;= #{startTime, jdbcType=TIMESTAMP}
+        AND f.add_time &gt;= curdate()
         AND f.fund_status = #{fundStatus,jdbcType=DECIMAL}
     </select>
 
