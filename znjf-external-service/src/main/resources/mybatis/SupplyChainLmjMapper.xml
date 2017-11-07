@@ -96,10 +96,9 @@
 
     <update id="updateBorrowRepayment">
         update rd_borrow_repayment r
-        set r.status = 3
+        set r.status = 3,repayment_no = #{repaymentNo,jdbcType=VARCHAR}
         where user_id = #{userId,jdbcType=DECIMAL}
         and borrow_id = #{borrowId,jdbcType=DECIMAL}
-        and repayment_no = #{repaymentNo,jdbcType=VARCHAR}
     </update>
 
     <update id="updateZnjfFundRepayStatus">
