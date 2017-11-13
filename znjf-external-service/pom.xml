@@ -23,6 +23,10 @@
 		</dependency>
 		<dependency>
 			<groupId>com.znjf33</groupId>
+			<artifactId>znjf-common-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.znjf33</groupId>
 			<artifactId>znjf-useraccount-api</artifactId>
 		</dependency>
 		<dependency>

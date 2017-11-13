@@ -131,4 +131,12 @@
         AND f.channel_from = #{channelFrom, jdbcType=DECIMAL}
         AND f.order_no = #{loanDrawUuid,jdbcType=VARCHAR}
     </select>
+
+    <update id="updateZnjfFundProcessStatus">
+        update znjf_fund
+        set process_status = #{processStatus,jdbcType=DECIMAL}
+        where buyer_id = #{userId,jdbcType=DECIMAL}
+        and order_no = #{loanDrawUuid,jdbcType=VARCHAR}
+        AND channel_from = #{channelFrom, jdbcType=DECIMAL}
+    </update>
 </mapper>

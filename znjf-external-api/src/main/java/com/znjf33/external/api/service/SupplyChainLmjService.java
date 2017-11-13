@@ -23,7 +23,7 @@ public interface SupplyChainLmjService {
      * @param supplyChainLmjParamDTO
      * @return
      */
-    boolean signatureFileForLmj(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
+    void signatureFileForLmj(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
     /**
      * 请求是否合规
      * @return
@@ -34,16 +34,10 @@ public interface SupplyChainLmjService {
      * @return
      */
     void getReimbursementRegistration(SupplyChainLmjReimbursementParamDTO supplyChainLmjReimbursementParamDTO);
-
     /**
-     * 获取标的信息
-     * @param userId
+     * 更新fund状态
+     * @param supplyChainLmjParamDTO
      * @return
      */
-    SupplyChainLmjResultDTO getBorrowInfo(Integer userId,String loanDrawUuid);
-    /**
-     * 更新fund表状态
-     * @return
-     */
-    void updateZnjfFundStatus(Integer userId,String loanDrawUuid);
+    void updateZnjfFundProcessStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
 }

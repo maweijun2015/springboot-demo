@@ -71,6 +71,11 @@
             </dependency>
             <dependency>
                 <groupId>com.znjf33</groupId>
+                <artifactId>znjf-common-web</artifactId>
+                <version>${znjf-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.znjf33</groupId>
                 <artifactId>znjf-common-service</artifactId>
                 <version>${znjf-common.version}</version>
             </dependency>

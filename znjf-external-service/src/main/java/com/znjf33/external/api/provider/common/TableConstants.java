@@ -16,6 +16,8 @@ public interface TableConstants {
     Integer znjf_fund_money_status_no = 0;
     /** 发标队列处理状态 - 不处理 */
     Integer znjf_fund_process_status_no = -1;
+    /** 发标队列处理状态 - 处理失败 */
+    Integer znjf_fund_process_status_error = 12;
     /** 数据来源 - 全网通 */
     Integer znjf_fund_data_from_lmj = 1;
 }

@@ -3,8 +3,10 @@ package com.znjf33.external.api.provider.service.impl;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.znjf33.common.service.common.Constants;
 import com.znjf33.common.service.common.Message;
 import com.znjf33.common.utils.DateUtil;
 import com.znjf33.common.utils.HclientFileUtil;
@@ -22,6 +24,8 @@ import com.znjf33.external.api.provider.domain.ZnjfFundAttachmentDO;
 import com.znjf33.external.api.provider.mapper.SupplyChainLmjMapper;
 import com.znjf33.external.api.provider.protocol.LoanProtocol;
 import com.znjf33.external.api.service.SupplyChainLmjService;
+import com.znjf33.investment.api.dto.LMJTransferDto;
+import com.znjf33.investment.api.service.BorrowUpdateService;
 import com.znjf33.useraccount.api.dto.UserSignatureDto;
 import com.znjf33.useraccount.api.service.UserSignatureService;
 import org.slf4j.Logger;
@@ -49,6 +53,9 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
 
     @Autowired
     private LoanProtocol loanProtocol;
+
+    @Autowired
+    private BorrowUpdateService borrowUpdateService;
 
     /**
      * 支用申请
@@ -114,12 +121,64 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
     }
 
     /**
-     * E签宝签约
+     * 签约
      * @param supplyChainLmjParamDTO
      * @return
      */
     @Override
-    public boolean signatureFileForLmj(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+    public void signatureFileForLmj(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+        try {
+            LOGGER.info(supplyChainLmjParamDTO.getUserId() + " 签约开始" + supplyChainLmjParamDTO.getLoanDrawUuid());
+            getBorrowSigningInfo(supplyChainLmjParamDTO);
+            //E签宝签约
+            boolean signatureFileForLmj = signatureFileForLmjSignature(supplyChainLmjParamDTO);
+            if (!signatureFileForLmj){
+                LOGGER.error(supplyChainLmjParamDTO.getLoanDrawUuid() + " 签约失败 signatureFileForLmj == " +signatureFileForLmj);
+                updateZnjfFundProcessStatus(supplyChainLmjParamDTO);
+                return;
+            }
+            LOGGER.info("e签宝签约成功");
+            //标的生成
+            LMJTransferDto lmjTransferDto = new LMJTransferDto();
+            lmjTransferDto.setDealNo(supplyChainLmjParamDTO.getAgreementNo());
+            lmjTransferDto.setAccount(supplyChainLmjParamDTO.getLoanAmount());
+            lmjTransferDto.setEntrustApr(12d);
+            lmjTransferDto.setEntrustEndDate(supplyChainLmjParamDTO.getEntrustEndDate());
+            lmjTransferDto.setLoanDuration(supplyChainLmjParamDTO.getDuration());
+            lmjTransferDto.setBorrowUse(Constants.TAIAN1_BORROW_USE);
+
+            LOGGER.info("标的生成开始");
+            borrowUpdateService.addQuanwangtongBorrow(lmjTransferDto,supplyChainLmjParamDTO.getLoanDrawUuid(), Constants.SUPPLY_CHAIN_CHANNEL_FROM);
+            LOGGER.info("标的生成成功");
+            //状态更新
+            LOGGER.info("************更新fund表状态******************");
+            supplyChainLmjMapper.updateZnjfFundStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.MONEY_STATUS_PAY,
+                    TableConstants.znjf_fund_data_from_lmj);
+            LOGGER.info("状态更新成功");
+        }catch (Exception e){
+            LOGGER.error(supplyChainLmjParamDTO.getUserId() + " 签约失败" + supplyChainLmjParamDTO.getLoanDrawUuid());
+            updateZnjfFundProcessStatus(supplyChainLmjParamDTO);
+        }
+    }
+
+    /**
+     * 更新fund状态
+     * @param supplyChainLmjParamDTO
+     * @return
+     */
+    @Override
+    public void updateZnjfFundProcessStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+        LOGGER.info("更新fund状态 loanDrawUuid = " + supplyChainLmjParamDTO.getLoanDrawUuid());
+        supplyChainLmjMapper.updateZnjfFundProcessStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.znjf_fund_process_status_error,
+                TableConstants.znjf_fund_data_from_lmj);
+    }
+
+    /**
+     * E签宝签约
+     * @param supplyChainLmjParamDTO
+     * @return
+     */
+    private boolean signatureFileForLmjSignature(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
         String srcFile="";
         String userResult="";
         String platformResult = "";
@@ -187,8 +246,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
      * 获取标的信息
      * @return
      */
-    @Override
-    public SupplyChainLmjResultDTO getBorrowInfo(Integer userId,String loanDrawUuid) {
+    private SupplyChainLmjResultDTO getBorrowInfo(Integer userId,String loanDrawUuid) {
         LOGGER.info("************获取标的信息******************");
         SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
         Integer countFundsToday = supplyChainLmjMapper.countFundsToday(userId,TableConstants.znjf_fund_data_from_lmj,
@@ -201,17 +259,6 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         supplyChainLmjResultDTO.setAmountApplied(supplyChainLmjResultDO.getAmountApplied());
         supplyChainLmjResultDTO.setDuration(supplyChainLmjResultDO.getDuration());
         return supplyChainLmjResultDTO;
-    }
-
-    /**
-     * 更新fund表状态
-     * @return
-     */
-    @Override
-    public void updateZnjfFundStatus(Integer userId,String loanDrawUuid) {
-        LOGGER.info("************更新fund表状态******************");
-        supplyChainLmjMapper.updateZnjfFundStatus(userId,loanDrawUuid,TableConstants.MONEY_STATUS_PAY,
-                TableConstants.znjf_fund_data_from_lmj);
     }
 
     /**
@@ -273,7 +320,22 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         supplyChainLmjResultDTO.setRealName(supplyChainLmjResultDO.getRealName());
     }
 
+    private void getBorrowSigningInfo(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+        SupplyChainLmjResultDTO borrowInfo = getBorrowInfo(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid());
 
+        Date nowTime = DateUtil.getNow();
+        Date entrustEndDate = DateUtil.rollDay(nowTime, borrowInfo.getDuration());
+        String dealNo = "ZJF" + DateUtil.getTimeYear(nowTime) + "JD-TA-6" + supplyChainLmjParamDTO.getUserId() + "-"
+                + DateUtil.getTimeMonth(nowTime) + DateUtil.getTimeDay(nowTime)+ borrowInfo.getCountFundsToday();
+        supplyChainLmjParamDTO.setAgreementNo(dealNo);
+        supplyChainLmjParamDTO.setLoanAmount(borrowInfo.getAmountApplied());
+        supplyChainLmjParamDTO.setLoanApr(12d);
+        supplyChainLmjParamDTO.setLoanStartDate(DateUtil.dateStr2(nowTime));
+        supplyChainLmjParamDTO.setLoanEndDate(DateUtil.dateStr2(entrustEndDate));
+        supplyChainLmjParamDTO.setDuration(borrowInfo.getDuration());
+        supplyChainLmjParamDTO.setLoanUse(Constants.TAIAN1_BORROW_USE);
+        supplyChainLmjParamDTO.setEntrustEndDate(entrustEndDate);
+    }
 
 
 

@@ -1,6 +1,7 @@
 package com.znjf33.external.api.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -115,6 +116,19 @@ public class SupplyChainLmjParamDTO implements Serializable {
      * 签署日期
      */
     private String signDate;
+
+    /**
+     * 还款日期
+     */
+    private Date entrustEndDate;
+
+    public Date getEntrustEndDate() {
+        return entrustEndDate;
+    }
+
+    public void setEntrustEndDate(Date entrustEndDate) {
+        this.entrustEndDate = entrustEndDate;
+    }
 
     public String getContent() {
         return content;
