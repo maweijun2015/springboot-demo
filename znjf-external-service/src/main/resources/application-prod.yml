@@ -26,14 +26,14 @@ spring:
     shutdown:
       hook: true
     application:
-      name: znjf-activity-service
-      owner: znjf-activity
+      name: znjf-external-service
+      owner: znjf-external
       logger: slf4j
     registry:
       protocol: zookeeper
       address: 127.0.0.1:2181
       client: curator
-      file: tmp/znjf-activity-service.cache
+      file: tmp/znjf-external-service.cache
     provider:
       timeout: 80000
       retries: 0
