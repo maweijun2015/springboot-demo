@@ -4,7 +4,7 @@
 
     <groupId>com.znjf33</groupId>
     <artifactId>znjf-external</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <modules>
         <module>znjf-external-api</module>
         <module>znjf-external-service</module>
@@ -18,7 +18,7 @@
         <url>http://172.16.33.20/znjf/znjf-external</url>
         <connection>scm:git:http://172.16.33.20/znjf/znjf-external.git</connection>
         <developerConnection>scm:git:http://172.16.33.20/znjf/znjf-external.git</developerConnection>
-        <tag>znjf-external-1.0.0</tag>
+        <tag>znjf_feature_signing</tag>
     </scm>
 
     <parent>
