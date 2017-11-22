@@ -29,10 +29,10 @@
     </parent>
 
     <properties>
-        <znjf-common.version>1.0.0</znjf-common.version>
-        <znjf-general.version>1.0.0</znjf-general.version>
-        <znjf-useraccount.version>1.0.0</znjf-useraccount.version>
-        <znjf-investment.version>1.0.0</znjf-investment.version>
+        <znjf-common.version>1.0.1-SNAPSHOT</znjf-common.version>
+        <znjf-general.version>1.0.1-SNAPSHOT</znjf-general.version>
+        <znjf-useraccount.version>1.0.1-SNAPSHOT</znjf-useraccount.version>
+        <znjf-investment.version>1.0.1-SNAPSHOT</znjf-investment.version>
         <zookeeper.version>3.4.8</zookeeper.version>
         <dubbo-springboot.version>1.0.0</dubbo-springboot.version>
         <dubbo.version>2.8.4</dubbo.version>
