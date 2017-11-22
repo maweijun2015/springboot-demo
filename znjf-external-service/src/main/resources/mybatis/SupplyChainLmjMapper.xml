@@ -139,4 +139,11 @@
         and order_no = #{loanDrawUuid,jdbcType=VARCHAR}
         AND channel_from = #{channelFrom, jdbcType=DECIMAL}
     </update>
+
+    <!-- 更新 znjf_lemuji_pay 支付状态 -->
+    <update id="updateZnjfLemujiPayStatus">
+        update znjf_lemuji_pay
+        set pay_status = #{payStatus,jdbcType=DECIMAL}
+        where order_no = #{orderNo,jdbcType=VARCHAR}
+    </update>
 </mapper>

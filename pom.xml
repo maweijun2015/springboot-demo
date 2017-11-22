@@ -29,7 +29,7 @@
     </parent>
 
     <properties>
-        <znjf-common.version>1.0.0</znjf-common.version>
+        <znjf-common.version>1.0.1-SNAPSHOT</znjf-common.version>
         <znjf-general.version>1.0.0</znjf-general.version>
         <znjf-useraccount.version>1.0.0</znjf-useraccount.version>
         <znjf-investment.version>1.0.0</znjf-investment.version>

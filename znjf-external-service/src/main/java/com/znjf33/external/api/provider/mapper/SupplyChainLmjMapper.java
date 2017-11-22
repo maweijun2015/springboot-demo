@@ -57,4 +57,12 @@ public interface SupplyChainLmjMapper {
      */
     void updateZnjfFundStatus(@Param("userId") Integer userId, @Param("loanDrawUuid") String loanDrawUuid, @Param("fundStatus") Integer fundStatus,@Param("channelFrom") Integer channelFrom);
     void updateZnjfFundProcessStatus(@Param("userId") Integer userId, @Param("loanDrawUuid") String loanDrawUuid, @Param("processStatus") Integer processStatus,@Param("channelFrom") Integer channelFrom);
+
+    /**
+     * 更新支付状态
+     * @param payStatus
+     * @param orderNo
+     */
+    void updateZnjfLemujiPayStatus(@Param("payStatus") Integer payStatus, @Param("orderNo")String orderNo);
+
 }

@@ -2,22 +2,19 @@ package com.znjf33.external.api.provider.service.impl;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.znjf33.common.service.common.Constants;
 import com.znjf33.common.service.common.Message;
-import com.znjf33.common.utils.DateUtil;
-import com.znjf33.common.utils.HclientFileUtil;
-import com.znjf33.common.utils.OrderNoUtils;
-import com.znjf33.common.utils.StringUtil;
+import com.znjf33.common.utils.*;
 import com.znjf33.common.utils.constant.enums.EnumUploadImgType;
 import com.znjf33.external.api.dto.OrderinfoDTO;
 import com.znjf33.external.api.dto.SupplyChainLmjParamDTO;
 import com.znjf33.external.api.dto.SupplyChainLmjReimbursementParamDTO;
 import com.znjf33.external.api.dto.SupplyChainLmjResultDTO;
 import com.znjf33.external.api.provider.common.TableConstants;
+import com.znjf33.external.api.provider.domain.LemujiPayDo;
 import com.znjf33.external.api.provider.domain.SupplyChainLmjParamDO;
 import com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO;
 import com.znjf33.external.api.provider.domain.ZnjfFundAttachmentDO;
@@ -104,10 +101,10 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         }
         //支用申请信息录入
         supplyChainLmjParamDO.setDealNo(OrderNoUtils.getSerialNumber());
-        supplyChainLmjParamDO.setFundStatus(TableConstants.znjf_fund_status_no_pay);
-        supplyChainLmjParamDO.setMoneyStatus(TableConstants.znjf_fund_money_status_no);
-        supplyChainLmjParamDO.setProcessStatus(TableConstants.znjf_fund_process_status_no);
-        supplyChainLmjParamDO.setChannelFrom(TableConstants.znjf_fund_data_from_lmj);
+        supplyChainLmjParamDO.setFundStatus(TableConstants.ZNJF_FUND_STATUS_NO_PAY);
+        supplyChainLmjParamDO.setMoneyStatus(TableConstants.ZNJF_FUND_MONEY_STATUS_NO);
+        supplyChainLmjParamDO.setProcessStatus(TableConstants.ZNJF_FUND_PROCESS_STATUS_NO);
+        supplyChainLmjParamDO.setChannelFrom(TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
         supplyChainLmjParamDO.setRepaymentDateApplied(DateUtil.rollDay(
                 DateUtil.getDateByFullDateStrOther(supplyChainLmjParamDO.getLoanDrawDate()),supplyChainLmjParamDO.getPeriod()));
         supplyChainLmjMapper.saveApplyLoan(supplyChainLmjParamDO);
@@ -153,7 +150,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             //状态更新
             LOGGER.info("************更新fund表状态******************");
             supplyChainLmjMapper.updateZnjfFundStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.MONEY_STATUS_PAY,
-                    TableConstants.znjf_fund_data_from_lmj);
+                    TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
             LOGGER.info("状态更新成功");
         }catch (Exception e){
             LOGGER.error(supplyChainLmjParamDTO.getUserId() + " 签约失败" + supplyChainLmjParamDTO.getLoanDrawUuid());
@@ -169,8 +166,8 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
     @Override
     public void updateZnjfFundProcessStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
         LOGGER.info("更新fund状态 loanDrawUuid = " + supplyChainLmjParamDTO.getLoanDrawUuid());
-        supplyChainLmjMapper.updateZnjfFundProcessStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.znjf_fund_process_status_error,
-                TableConstants.znjf_fund_data_from_lmj);
+        supplyChainLmjMapper.updateZnjfFundProcessStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.ZNJF_FUND_PROCESS_STATUS_ERROR,
+                TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
     }
 
     /**
@@ -249,10 +246,10 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
     private SupplyChainLmjResultDTO getBorrowInfo(Integer userId,String loanDrawUuid) {
         LOGGER.info("************获取标的信息******************");
         SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
-        Integer countFundsToday = supplyChainLmjMapper.countFundsToday(userId,TableConstants.znjf_fund_data_from_lmj,
+        Integer countFundsToday = supplyChainLmjMapper.countFundsToday(userId,TableConstants.ZNJF_FUND_DATA_FROM_LMJ,
                 TableConstants.MONEY_STATUS_PAY);
         supplyChainLmjResultDTO.setCountFundsToday(countFundsToday);
-        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnfFundByOrderNo(userId,TableConstants.znjf_fund_data_from_lmj,loanDrawUuid);
+        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnfFundByOrderNo(userId,TableConstants.ZNJF_FUND_DATA_FROM_LMJ,loanDrawUuid);
         if (supplyChainLmjResultDO == null){
             return null;
         }
@@ -284,11 +281,55 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
      */
     @Transactional(rollbackFor = Throwable.class)
     @Override
-    public void getCallbackPayStatus(SupplyChainLmjReimbursementParamDTO supplyChainLmjReimbursementParamDTO) {
-        LOGGER.info("获取乐木几翼支付成功与否回调");
+    public void getCallbackPayStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO) {
+        LOGGER.info("获取乐木几翼支付成功与否回调 externalId = {}",supplyChainLmjParamDTO.getExternalId() );
+        if (!"000000".equals(supplyChainLmjParamDTO.getPayCode())){
+            LOGGER.error("getCallbackPayStatus(),乐木几回调code不是000000,code={},type={},externalId={}",supplyChainLmjParamDTO.getPayCode(),
+                    supplyChainLmjParamDTO.getPayType(),supplyChainLmjParamDTO.getExternalId());
+            return;
+        }
         //更新znjf_lemuji_pay表状态
+        supplyChainLmjMapper.updateZnjfLemujiPayStatus(TableConstants.ZNJF_LEMUJI_PAY_STATUS,supplyChainLmjParamDTO.getExternalId());
+        //充值接口回调
+        if ("chargeFB".equals(supplyChainLmjParamDTO.getPayType())){
+            //调用企业间转帐接口
+            LemujiPayDo pay = new LemujiPayDo();
+            pay.setOrderNo(OrderNoUtils.getSerialNumber());
+            pay.setTransactionNo(OrderNoUtils.getSerialNumber());
+//            pay.setPayeeMerchantNo(payeeMerchantNo);
+//            pay.setTransactionAmount(transactionAmount);
+            pay.setTransactionTime(DateUtil.getNow());
+            pay.setTransactionType(LemujiPayDo.PAY_TYPE_TO_FINANCER);
 
-        //调用企业间转帐接口
+            Map<String,String> params = new HashMap<>();
+            params.put("PARTNERID",supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
+            params.put("PAYEECODE",pay.getPayeeMerchantNo());
+            params.put("AREACODE","330000");
+            params.put("TXNAMOUNT", String.valueOf(pay.getTransactionAmount()));
+            params.put("ORDERSEQ",pay.getOrderNo());
+            params.put("TRANSSEQ",pay.getTransactionNo());
+            params.put("TRADETIME",DateUtil.dateStr3(pay.getTransactionTime()));
+            params.put("MARK1","");
+
+            pay.setTransactionDesc(JSON.toJSONString(params));
+            pay.setPayStatus(0);
+
+
+            String s = HttpUtil.postPayToLemuji(supplyChainLmjParamDTO.getQuanwangtongYizhifuTransfer(),
+                    params, supplyChainLmjParamDTO.getLmjApiSecretKey());
+
+
+        }
+
+        //企业间转帐接口回调
+        if ("transfer".equals(supplyChainLmjParamDTO.getPayType())){
+            //调用乐木几放款接口
+
+
+
+        }
+
+
     }
 
 
