@@ -40,4 +40,9 @@ public interface SupplyChainLmjService {
      * @return
      */
     void updateZnjfFundProcessStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
+    /**
+     * 获取乐木几翼支付成功与否回调
+     * @return
+     */
+    void getCallbackPayStatus(SupplyChainLmjReimbursementParamDTO supplyChainLmjReimbursementParamDTO);
 }

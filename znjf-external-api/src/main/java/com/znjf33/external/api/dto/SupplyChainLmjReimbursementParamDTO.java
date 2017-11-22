@@ -30,9 +30,33 @@ public class SupplyChainLmjReimbursementParamDTO implements Serializable {
      */
     private Integer isSettle;
     /**
+     * 外部订单号
+     */
+    private String externalId;
+    /**
+     * 支付code码   000000:成功  -1:失败
+     */
+    private String payCode;
+    /**
      * 结果反馈
      */
     private List<RepaymentDataDTO> repaymentDataDTOList;
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public String getPayCode() {
+        return payCode;
+    }
+
+    public void setPayCode(String payCode) {
+        this.payCode = payCode;
+    }
 
     public String getLoanAppUuid() {
         return loanAppUuid;

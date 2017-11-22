@@ -278,6 +278,19 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
                 TableConstants.MONEY_STATUS_REPAYING);
     }
 
+    /**
+     * 获取乐木几翼支付成功与否回调
+     * @return
+     */
+    @Transactional(rollbackFor = Throwable.class)
+    @Override
+    public void getCallbackPayStatus(SupplyChainLmjReimbursementParamDTO supplyChainLmjReimbursementParamDTO) {
+        LOGGER.info("获取乐木几翼支付成功与否回调");
+        //更新znjf_lemuji_pay表状态
+
+        //调用企业间转帐接口
+    }
+
 
     private List<ZnjfFundAttachmentDO> listZnjfFundAttachment(List<OrderinfoDTO> orderinfoDTOs,
                                                               SupplyChainLmjParamDO supplyChainLmjParamDO ){
