@@ -26,4 +26,14 @@ public class SupplyChainLmjDaoTest extends JunitBase{
                 "1710271310001272");
                 Assert.assertNotNull(supplyChainLmjResultDO);
     }
+
+    /**
+     * 查询交易详情
+     */
+    @Test
+    public void getZnjfLemujiPayByUuid(){
+//        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfLemujiPayByUuid(81606,
+//                "1710271310001272");
+//                Assert.assertNotNull(supplyChainLmjResultDO);
+    }
 }

@@ -74,7 +74,7 @@ public class LemujiPayDo{
     /**
      * 交易金额
      */
-    private int transactionAmount;
+    private Float transactionAmount;
     /**
      * 交易金额, 1-平台翼支付到融资人翼支付；2-平台翼支付到银行账户；3-银行账户到平台翼支付
      */
@@ -92,6 +92,18 @@ public class LemujiPayDo{
      * 交易详情, json字符串
      */
     private String transactionDesc;
+    /**
+     * 用户id
+     */
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public String getLoanDrawUuid() {
         return loanDrawUuid;
@@ -173,11 +185,11 @@ public class LemujiPayDo{
         this.payeeMerchantNo = payeeMerchantNo;
     }
 
-    public int getTransactionAmount() {
+    public Float getTransactionAmount() {
         return transactionAmount;
     }
 
-    public void setTransactionAmount(int transactionAmount) {
+    public void setTransactionAmount(Float transactionAmount) {
         this.transactionAmount = transactionAmount;
     }
 

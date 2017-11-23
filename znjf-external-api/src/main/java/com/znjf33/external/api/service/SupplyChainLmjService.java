@@ -33,7 +33,7 @@ public interface SupplyChainLmjService {
      * 还款登记信息
      * @return
      */
-    void getReimbursementRegistration(SupplyChainLmjReimbursementParamDTO supplyChainLmjReimbursementParamDTO);
+    boolean getReimbursementRegistration(SupplyChainLmjReimbursementParamDTO supplyChainLmjReimbursementParamDTO);
     /**
      * 更新fund状态
      * @param supplyChainLmjParamDTO

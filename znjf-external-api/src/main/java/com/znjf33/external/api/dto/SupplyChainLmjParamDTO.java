@@ -28,6 +28,10 @@ public class SupplyChainLmjParamDTO implements Serializable {
      */
     private String payCode;
     /**
+     * 支付回调信息
+     */
+    private String payMsg;
+    /**
      * 支付类型   transfer:企业间转帐    payTB:付款到银行帐号    chargeFB:充值接口
      */
     private String payType;
@@ -43,6 +47,10 @@ public class SupplyChainLmjParamDTO implements Serializable {
      * 翼支付接入识别编码
      */
     private String quanwangtongYizhifuPartnerid;
+    /**
+     * 乐木几地址
+     */
+    private String lmjUrl;
     /**
      * 乐木几开放秘钥
      */
@@ -149,6 +157,22 @@ public class SupplyChainLmjParamDTO implements Serializable {
      * 还款日期
      */
     private Date entrustEndDate;
+
+    public String getLmjUrl() {
+        return lmjUrl;
+    }
+
+    public void setLmjUrl(String lmjUrl) {
+        this.lmjUrl = lmjUrl;
+    }
+
+    public String getPayMsg() {
+        return payMsg;
+    }
+
+    public void setPayMsg(String payMsg) {
+        this.payMsg = payMsg;
+    }
 
     public String getQuanwangtongYizhifuPartnerid() {
         return quanwangtongYizhifuPartnerid;

@@ -30,9 +30,69 @@ public class SupplyChainLmjReimbursementParamDTO implements Serializable {
      */
     private Integer isSettle;
     /**
+     * 翼支付接入识别编码
+     */
+    private String quanwangtongYizhifuPartnerid;
+    /**
+     * 翼支付放宽到银行卡接口
+     */
+    private String quanwangtongYizhifuPaytb;
+    /**
+     * 乐木几开放秘钥
+     */
+    private String lmjApiSecretKey;
+    /**
+     * 全网通帐号
+     */
+    private String quanwangtongName;
+    /**
+     * 全网通账户
+     */
+    private String quanwangtongACCOUNT;
+    /**
      * 结果反馈
      */
     private List<RepaymentDataDTO> repaymentDataDTOList;
+
+    public String getLmjApiSecretKey() {
+        return lmjApiSecretKey;
+    }
+
+    public void setLmjApiSecretKey(String lmjApiSecretKey) {
+        this.lmjApiSecretKey = lmjApiSecretKey;
+    }
+
+    public String getQuanwangtongName() {
+        return quanwangtongName;
+    }
+
+    public void setQuanwangtongName(String quanwangtongName) {
+        this.quanwangtongName = quanwangtongName;
+    }
+
+    public String getQuanwangtongACCOUNT() {
+        return quanwangtongACCOUNT;
+    }
+
+    public void setQuanwangtongACCOUNT(String quanwangtongACCOUNT) {
+        this.quanwangtongACCOUNT = quanwangtongACCOUNT;
+    }
+
+    public String getQuanwangtongYizhifuPaytb() {
+        return quanwangtongYizhifuPaytb;
+    }
+
+    public void setQuanwangtongYizhifuPaytb(String quanwangtongYizhifuPaytb) {
+        this.quanwangtongYizhifuPaytb = quanwangtongYizhifuPaytb;
+    }
+
+    public String getQuanwangtongYizhifuPartnerid() {
+        return quanwangtongYizhifuPartnerid;
+    }
+
+    public void setQuanwangtongYizhifuPartnerid(String quanwangtongYizhifuPartnerid) {
+        this.quanwangtongYizhifuPartnerid = quanwangtongYizhifuPartnerid;
+    }
 
     public String getLoanAppUuid() {
         return loanAppUuid;

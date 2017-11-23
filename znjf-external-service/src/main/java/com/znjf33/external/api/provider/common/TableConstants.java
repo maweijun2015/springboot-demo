@@ -20,6 +20,4 @@ public interface TableConstants {
     Integer ZNJF_FUND_PROCESS_STATUS_ERROR = 12;
     /** 数据来源 - 全网通 */
     Integer ZNJF_FUND_DATA_FROM_LMJ = 1;
-    /** 翼支付状态 - 支付成功 */
-    Integer ZNJF_LEMUJI_PAY_STATUS = 1;
 }

@@ -1,5 +1,7 @@
 package com.znjf33.external.api.provider.domain;
 
+import java.util.Date;
+
 /**
  * @author maweijun
  * @description
@@ -48,6 +50,114 @@ public class SupplyChainLmjResultDO {
      * 垫资金额
      */
     private Double amountApplied;
+    /**
+     * 商户号
+     */
+    private String extMerchants;
+    /**
+     * 支用唯一编号
+     */
+    private String loanDrawUuid;
+    /**
+     * 贷款唯一编号
+     */
+    private String loanAppUuid;
+    /**
+     * 交易金额
+     */
+    private Float transactionAmount;
+    /**
+     * 预计还款时间
+     */
+    private Date repaymentTime;
+    /**
+     * 预还金额
+     */
+    private double repaymentAccount;
+    /**
+     * 本金
+     */
+    private double capital;
+    /**
+     * 利息
+     */
+    private double interest;
+    /**
+     * 服务费
+     */
+    private double manageFee;
+
+    public double getManageFee() {
+        return manageFee;
+    }
+
+    public void setManageFee(double manageFee) {
+        this.manageFee = manageFee;
+    }
+
+    public double getInterest() {
+        return interest;
+    }
+
+    public void setInterest(double interest) {
+        this.interest = interest;
+    }
+
+    public double getCapital() {
+        return capital;
+    }
+
+    public void setCapital(double capital) {
+        this.capital = capital;
+    }
+
+    public double getRepaymentAccount() {
+        return repaymentAccount;
+    }
+
+    public void setRepaymentAccount(double repaymentAccount) {
+        this.repaymentAccount = repaymentAccount;
+    }
+
+    public Date getRepaymentTime() {
+        return repaymentTime;
+    }
+
+    public void setRepaymentTime(Date repaymentTime) {
+        this.repaymentTime = repaymentTime;
+    }
+
+    public String getLoanAppUuid() {
+        return loanAppUuid;
+    }
+
+    public void setLoanAppUuid(String loanAppUuid) {
+        this.loanAppUuid = loanAppUuid;
+    }
+
+    public Float getTransactionAmount() {
+        return transactionAmount;
+    }
+
+    public void setTransactionAmount(Float transactionAmount) {
+        this.transactionAmount = transactionAmount;
+    }
+
+    public String getLoanDrawUuid() {
+        return loanDrawUuid;
+    }
+
+    public void setLoanDrawUuid(String loanDrawUuid) {
+        this.loanDrawUuid = loanDrawUuid;
+    }
+
+    public String getExtMerchants() {
+        return extMerchants;
+    }
+
+    public void setExtMerchants(String extMerchants) {
+        this.extMerchants = extMerchants;
+    }
 
     public Integer getDuration() {
         return duration;
