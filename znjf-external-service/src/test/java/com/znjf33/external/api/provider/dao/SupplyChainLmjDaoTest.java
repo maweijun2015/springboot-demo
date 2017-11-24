@@ -32,8 +32,26 @@ public class SupplyChainLmjDaoTest extends JunitBase{
      */
     @Test
     public void getZnjfLemujiPayByUuid(){
-//        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfLemujiPayByUuid(81606,
-//                "1710271310001272");
-//                Assert.assertNotNull(supplyChainLmjResultDO);
+        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfLemujiPayByUuid("LMJZY201711151734557517");
+        Assert.assertNotNull(supplyChainLmjResultDO);
+    }
+
+    /**
+     * 查询标信息
+     */
+    @Test
+    public void getZnjfFundByUserId(){
+        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfFundByUserId(902,"LMJZY201711151734557517");
+        Assert.assertNotNull(supplyChainLmjResultDO);
+    }
+
+    /**
+     * 更新还款表第三方每一笔还款唯一编号
+     */
+    @Test
+    public void updateBorrowRepayment(){
+        String number = "12345678";
+        supplyChainLmjMapper.updateBorrowRepayment(902,23823l,number);
+        Assert.assertTrue(true);
     }
 }
