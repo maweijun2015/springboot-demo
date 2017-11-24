@@ -307,23 +307,27 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
      */
     @Transactional(rollbackFor = Throwable.class)
     @Override
-    public void getCallbackPayStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO) {
+    public boolean getCallbackPayStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO) {
         LOGGER.info("获取乐木几翼支付成功与否回调 externalId = {}",supplyChainLmjParamDTO.getExternalId() );
+        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfLemujiPayByOrderId(supplyChainLmjParamDTO.getExternalId());
+        if(supplyChainLmjResultDO == null){
+            return false;
+        }
+
         if (!"000000".equals(supplyChainLmjParamDTO.getPayCode()) && !"302013".equals(supplyChainLmjParamDTO.getPayCode())){
             LOGGER.error("getCallbackPayStatus(),乐木几回调code不是000000,code={},type={},externalId={},msg={}",supplyChainLmjParamDTO.getPayCode(),
                     supplyChainLmjParamDTO.getPayType(),supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getPayMsg());
             supplyChainLmjMapper.updateZnjfLemujiPayStatus(LemujiPayDo.PAY_STATUS_FAIL,supplyChainLmjParamDTO.getPayMsg(),supplyChainLmjParamDTO.getExternalId());
-            return;
+            return true;
         }
         if ("302013".equals(supplyChainLmjParamDTO.getPayCode())){
             LOGGER.error("getCallbackPayStatus(),code={},type={},externalId={},msg={}",supplyChainLmjParamDTO.getPayCode(),
                     supplyChainLmjParamDTO.getPayType(),supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getPayMsg());
             supplyChainLmjMapper.updateZnjfLemujiPayStatus(LemujiPayDo.PAY_STATUS_PAYING,supplyChainLmjParamDTO.getPayMsg(),supplyChainLmjParamDTO.getExternalId());
-            return;
+            return true;
         }
         //更新znjf_lemuji_pay表状态
         supplyChainLmjMapper.updateZnjfLemujiPayStatus(LemujiPayDo.PAY_STATUS_SUCCESS,supplyChainLmjParamDTO.getPayMsg(),supplyChainLmjParamDTO.getExternalId());
-        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfLemujiPayByOrderId(supplyChainLmjParamDTO.getExternalId());
         SupplyChainLmjResultDO znjfExternalUser = supplyChainLmjMapper.getZnjfExternalUserByUserId(supplyChainLmjResultDO.getUserId());
         //充值接口回调
         if ("chargeFB".equals(supplyChainLmjParamDTO.getPayType())){
@@ -397,6 +401,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             LOGGER.info("付款到银行账户接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
                     supplyChainLmjResultDO.getUserId());
         }
+        return true;
     }
 
 
