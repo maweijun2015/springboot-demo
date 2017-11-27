@@ -65,7 +65,7 @@ public class SupplyChainLmjResultDO {
     /**
      * 交易金额
      */
-    private Float transactionAmount;
+    private Long transactionAmount;
     /**
      * 预计还款时间
      */
@@ -135,11 +135,11 @@ public class SupplyChainLmjResultDO {
         this.loanAppUuid = loanAppUuid;
     }
 
-    public Float getTransactionAmount() {
+    public Long getTransactionAmount() {
         return transactionAmount;
     }
 
-    public void setTransactionAmount(Float transactionAmount) {
+    public void setTransactionAmount(Long transactionAmount) {
         this.transactionAmount = transactionAmount;
     }
 

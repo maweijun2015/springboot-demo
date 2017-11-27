@@ -178,7 +178,6 @@
         insert into znjf_lemuji_pay(
         order_no,
         transaction_no,
-        transaction_name,
         payee_merchant_no,
         transaction_amount,
         transaction_type,
@@ -192,7 +191,6 @@
         (
             #{orderNo,jdbcType=VARCHAR},
             #{transactionNo,jdbcType=VARCHAR},
-            #{transactionName,jdbcType=VARCHAR},
             #{payeeMerchantNo,jdbcType=VARCHAR},
             #{transactionAmount,jdbcType=DECIMAL},
             #{transactionType,jdbcType=DECIMAL},
@@ -200,7 +198,7 @@
             #{transactionDesc,jdbcType=VARCHAR},
             #{loanDrawUuid,jdbcType=VARCHAR},
             #{userId,jdbcType=DECIMAL},
-            #{transactionTime,jdbcType=TIMESTAMP},
+            #{transactionTime,jdbcType=TIMESTAMP}
         )
     </insert>
 

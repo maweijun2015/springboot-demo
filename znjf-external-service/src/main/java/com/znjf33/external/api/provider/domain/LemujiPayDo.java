@@ -74,7 +74,7 @@ public class LemujiPayDo{
     /**
      * 交易金额
      */
-    private Float transactionAmount;
+    private Long transactionAmount;
     /**
      * 交易金额, 1-平台翼支付到融资人翼支付；2-平台翼支付到银行账户；3-银行账户到平台翼支付
      */
@@ -185,11 +185,11 @@ public class LemujiPayDo{
         this.payeeMerchantNo = payeeMerchantNo;
     }
 
-    public Float getTransactionAmount() {
+    public Long getTransactionAmount() {
         return transactionAmount;
     }
 
-    public void setTransactionAmount(Float transactionAmount) {
+    public void setTransactionAmount(Long transactionAmount) {
         this.transactionAmount = transactionAmount;
     }
 

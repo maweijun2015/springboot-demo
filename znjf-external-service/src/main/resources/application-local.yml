@@ -1,7 +1,7 @@
 spring:
   # DataSource Config
   datasource:
-      url: jdbc:mysql://172.16.33.100:3306/app_test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+      url: jdbc:mysql://172.16.33.211:3306/test_znjf?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
       username: root
       password: 123456
       type: com.alibaba.druid.pool.DruidDataSource

@@ -42,6 +42,8 @@ public class LemujiNotifier {
     public static boolean payPushTransfer(String quanwangtongYizhifuTransfer, Map<String,String> params, String lmjApiSecretKey,
                                   String externalId,String partnerAppId) {
         boolean isSuccess = false;
+        LOGGER.info("***参数：{}",JSON.toJSON(params));
+        LOGGER.info("***url：{}",quanwangtongYizhifuTransfer);
         String s = HttpUtil.postPayToLemuji(quanwangtongYizhifuTransfer, params,lmjApiSecretKey,partnerAppId);
         LOGGER.info("{} 支付到平台翼支付账号:{}",externalId,s);
         ApiResponser responser = ApiResponser.build(s);
