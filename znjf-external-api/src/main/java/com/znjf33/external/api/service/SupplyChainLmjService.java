@@ -44,5 +44,5 @@ public interface SupplyChainLmjService {
      * 获取乐木几翼支付成功与否回调
      * @return
      */
-    boolean getCallbackPayStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
+    SupplyChainLmjResultDTO getCallbackPayStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
 }

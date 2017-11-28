@@ -165,6 +165,7 @@
 
     <select id="getZnjfLemujiPayByOrderId" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
         select loan_draw_uuid as loanDrawUuid,user_id as userId,
+        retry_num as retryNum,
         transaction_amount as transactionAmount
         from znjf_lemuji_pay z where z.order_no=#{orderNo,jdbcType=VARCHAR}
     </select>

@@ -86,6 +86,18 @@ public class SupplyChainLmjResultDO {
      * 服务费
      */
     private double manageFee;
+    /**
+     * 重发次数
+     */
+    private int retryNum;
+
+    public int getRetryNum() {
+        return retryNum;
+    }
+
+    public void setRetryNum(int retryNum) {
+        this.retryNum = retryNum;
+    }
 
     public double getManageFee() {
         return manageFee;
