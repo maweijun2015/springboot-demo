@@ -44,9 +44,17 @@ public class SupplyChainLmjParamDTO implements Serializable {
      */
     private String quanwangtongYizhifuTransfer;
     /**
+     * 翼支付充值接口
+     */
+    private String quanwangtongYizhifuChargefb;
+    /**
      * 翼支付接入识别编码
      */
     private String quanwangtongYizhifuPartnerid;
+    /**
+     * 翼支付放宽到银行卡接口
+     */
+    private String quanwangtongYizhifuPaytb;
     /**
      * 乐木几地址
      */
@@ -157,6 +165,22 @@ public class SupplyChainLmjParamDTO implements Serializable {
      * 还款日期
      */
     private Date entrustEndDate;
+
+    public String getQuanwangtongYizhifuPaytb() {
+        return quanwangtongYizhifuPaytb;
+    }
+
+    public void setQuanwangtongYizhifuPaytb(String quanwangtongYizhifuPaytb) {
+        this.quanwangtongYizhifuPaytb = quanwangtongYizhifuPaytb;
+    }
+
+    public String getQuanwangtongYizhifuChargefb() {
+        return quanwangtongYizhifuChargefb;
+    }
+
+    public void setQuanwangtongYizhifuChargefb(String quanwangtongYizhifuChargefb) {
+        this.quanwangtongYizhifuChargefb = quanwangtongYizhifuChargefb;
+    }
 
     public String getLmjUrl() {
         return lmjUrl;

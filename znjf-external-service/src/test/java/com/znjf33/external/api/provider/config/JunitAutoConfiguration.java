@@ -31,8 +31,4 @@ public class JunitAutoConfiguration {
     protected BorrowUpdateService borrowUpdateService() {
         return mock(BorrowUpdateService.class);
     }
-    @Bean
-    protected SupplyChainLmjService supplyChainLmjService() {
-        return mock(SupplyChainLmjService.class);
-    }
 }

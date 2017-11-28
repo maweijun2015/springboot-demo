@@ -153,6 +153,7 @@
         set pay_status = #{payStatus,jdbcType=DECIMAL},
         fail_msg = #{payMsg,jdbcType=VARCHAR},
         version = version +1,
+        retry_num = retry_num +1,
         update_time = now()
         where order_no = #{orderNo,jdbcType=VARCHAR}
     </update>
@@ -178,6 +179,8 @@
         insert into znjf_lemuji_pay(
         order_no,
         transaction_no,
+        payee_account_name,
+        payee_account_no,
         payee_merchant_no,
         transaction_amount,
         transaction_type,
@@ -191,6 +194,8 @@
         (
             #{orderNo,jdbcType=VARCHAR},
             #{transactionNo,jdbcType=VARCHAR},
+            #{payeeAccountName,jdbcType=VARCHAR},
+            #{payeeAccountNo,jdbcType=VARCHAR},
             #{payeeMerchantNo,jdbcType=VARCHAR},
             #{transactionAmount,jdbcType=DECIMAL},
             #{transactionType,jdbcType=DECIMAL},

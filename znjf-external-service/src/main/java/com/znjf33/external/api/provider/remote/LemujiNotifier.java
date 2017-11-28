@@ -18,7 +18,6 @@ public class LemujiNotifier {
 
     private static final String SUCCESS_INDEX = "000000";
     private static final String RESULT_CODE = "code";
-    private static final String PROCESSING_CODE = "011007";
 
     private LemujiNotifier() {}
 
@@ -33,6 +32,7 @@ public class LemujiNotifier {
         String s = HttpUtil.postJsonWithEncrypt(rootUrl + api.getId(), params, lmjApiSecretKey,actionId,partnerAppId);
         LOGGER.info("*********Lemuji Return:"+s);
         ApiResponser apiResponser = ApiResponser.build(s);
+        LOGGER.info("*********msg:"+ new String(apiResponser.getString("msg")));
         if(SUCCESS_INDEX.equals(apiResponser.getString(RESULT_CODE))){
             isSuccess = true;
         }
@@ -44,18 +44,39 @@ public class LemujiNotifier {
         boolean isSuccess = false;
         LOGGER.info("***参数：{}",JSON.toJSON(params));
         LOGGER.info("***url：{}",quanwangtongYizhifuTransfer);
+        LOGGER.info("***partnerAppId：{}",partnerAppId);
         String s = HttpUtil.postPayToLemuji(quanwangtongYizhifuTransfer, params,lmjApiSecretKey,partnerAppId);
+        LOGGER.info("{} 放款给融资人:{}",externalId,s);
+        ApiResponser responser = ApiResponser.build(s);
+        String responsecode = responser.getString("code");
+        LOGGER.info("{} 放款给融资人  msg : {} ",externalId,new String(responser.getString("msg")));
+        if(SUCCESS_INDEX.equalsIgnoreCase(responsecode)){
+            LOGGER.info("{} 调用放款给融资人接口成功",externalId);
+        }else {
+            LOGGER.error("{} 调用放款给融资人接口失败",externalId);
+        }
+        return isSuccess;
+    }
+
+    public static boolean payPushChargeFb(String quanwangtongYizhifuChargeFb, Map<String,String> params, String lmjApiSecretKey,
+                                          String externalId,String partnerAppId) {
+        boolean isSuccess = false;
+        LOGGER.info("***参数：{}",JSON.toJSON(params));
+        LOGGER.info("***url：{}",quanwangtongYizhifuChargeFb);
+        String s = HttpUtil.postPayToLemuji(quanwangtongYizhifuChargeFb, params,lmjApiSecretKey,partnerAppId);
         LOGGER.info("{} 支付到平台翼支付账号:{}",externalId,s);
         ApiResponser responser = ApiResponser.build(s);
         String responsecode = responser.getString("code");
         LOGGER.info("{} 支付到平台翼支付账号  msg : {} ",externalId,new String(responser.getString("msg")));
-        if(PROCESSING_CODE.equalsIgnoreCase(responsecode)){
+        if(SUCCESS_INDEX.equalsIgnoreCase(responsecode)){
             LOGGER.info("{} 调用平台翼支付账号接口成功",externalId);
         }else {
             LOGGER.error("{} 调用平台翼支付接口失败",externalId);
         }
         return isSuccess;
     }
+
+
 
     public static boolean payPushPaytb(String quanwangtongYizhifuTransfer, Map<String,String> params, String lmjApiSecretKey,
                                           String externalId,String partnerAppId) {
@@ -65,7 +86,7 @@ public class LemujiNotifier {
         ApiResponser responser = ApiResponser.build(s);
         String responsecode = responser.getString("code");
         LOGGER.info("{} 支付到银行卡  msg : {} ",externalId,new String(responser.getString("msg")));
-        if(PROCESSING_CODE.equalsIgnoreCase(responsecode)){
+        if(SUCCESS_INDEX.equalsIgnoreCase(responsecode)){
             LOGGER.info("{} 调用支付到银行卡接口成功",externalId);
         }else {
             LOGGER.error("{} 调用支付到银行卡接口失败",externalId);
