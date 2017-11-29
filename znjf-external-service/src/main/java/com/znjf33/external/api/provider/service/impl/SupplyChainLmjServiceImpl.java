@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -380,6 +381,16 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
      */
     private void callWingToPayTransferSuccess(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
                                        SupplyChainLmjResultDO znjfExternalUser){
+        Map<String,String> params = callWingToPayTransferSuccessToParams(supplyChainLmjParamDTO,supplyChainLmjResultDO,znjfExternalUser);
+        LemujiNotifier.payPushTransfer(supplyChainLmjParamDTO.getQuanwangtongYizhifuTransfer(),params,supplyChainLmjParamDTO.getLmjApiSecretKey(),
+                supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
+        LOGGER.info("充值接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
+                supplyChainLmjResultDO.getUserId());
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    private Map<String,String> callWingToPayTransferSuccessToParams(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
+                                                      SupplyChainLmjResultDO znjfExternalUser){
         LemujiPayDo pay =  getDoToPay(supplyChainLmjResultDO.getLoanDrawUuid(),supplyChainLmjResultDO.getUserId(),znjfExternalUser.getExtMerchants(),
                 supplyChainLmjResultDO.getTransactionAmount(), "","",LemujiPayDo.PAY_TYPE_TO_FINANCER,"");
         Map<String,String>  params = getToPayParams(supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid(),pay.getPayeeMerchantNo(),
@@ -387,10 +398,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
                 pay.getOrderNo(),pay.getTransactionNo(),pay.getTransactionTime());
         pay.setTransactionDesc(JSON.toJSONString(params));
         supplyChainLmjMapper.saveZnjfLemujiPay(pay);
-        LemujiNotifier.payPushTransfer(supplyChainLmjParamDTO.getQuanwangtongYizhifuTransfer(),params,supplyChainLmjParamDTO.getLmjApiSecretKey(),
-                supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
-        LOGGER.info("充值接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
-                supplyChainLmjResultDO.getUserId());
+        return params;
     }
 
     /**
