@@ -299,6 +299,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
         SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfLemujiPayByOrderId(supplyChainLmjParamDTO.getExternalId());
         if(supplyChainLmjResultDO == null){
+            LOGGER.info("账户不存在 externalId = {}",supplyChainLmjParamDTO.getExternalId() );
             supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_ACCOUNT_NOT_EXIST.code());
             return supplyChainLmjResultDTO;
         }
