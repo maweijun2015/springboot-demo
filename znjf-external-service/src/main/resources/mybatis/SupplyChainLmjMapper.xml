@@ -96,7 +96,14 @@
 
     <update id="updateBorrowRepayment">
         update rd_borrow_repayment r
-        set r.status = 3,repayment_no = #{repaymentNo,jdbcType=VARCHAR}
+        set repayment_no = #{repaymentNo,jdbcType=VARCHAR}
+        where user_id = #{userId,jdbcType=DECIMAL}
+        and borrow_id = #{borrowId,jdbcType=DECIMAL}
+    </update>
+
+    <update id="updateBorrowRepaymentStatus">
+        update rd_borrow_repayment r
+        set r.status = 3
         where user_id = #{userId,jdbcType=DECIMAL}
         and borrow_id = #{borrowId,jdbcType=DECIMAL}
     </update>
@@ -139,4 +146,75 @@
         and order_no = #{loanDrawUuid,jdbcType=VARCHAR}
         AND channel_from = #{channelFrom, jdbcType=DECIMAL}
     </update>
+
+    <!-- 更新 znjf_lemuji_pay 支付状态 -->
+    <update id="updateZnjfLemujiPayStatus">
+        update znjf_lemuji_pay
+        set pay_status = #{payStatus,jdbcType=DECIMAL},
+        fail_msg = #{payMsg,jdbcType=VARCHAR},
+        version = version +1,
+        retry_num = retry_num +1,
+        update_time = now()
+        where order_no = #{orderNo,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getZnjfExternalUserByUserId" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+        select ext_merchants as extMerchants,loan_app_uuid as loanAppUuid from znjf_external_user z where z.user_id=#{userId,jdbcType=DECIMAL}
+        and z.ext_user_type=1002 and z.ext_platform = 3000
+    </select>
+
+    <select id="getZnjfLemujiPayByOrderId" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+        select loan_draw_uuid as loanDrawUuid,user_id as userId,
+        retry_num as retryNum,
+        transaction_amount as transactionAmount
+        from znjf_lemuji_pay z where z.order_no=#{orderNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getZnjfLemujiPayByUuid" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+        select transaction_amount as transactionAmount,user_id as userId
+        from znjf_lemuji_pay z where z.loan_draw_uuid=#{loanDrawUuid,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 保存支付信息表-->
+    <insert id="saveZnjfLemujiPay" parameterType="com.znjf33.external.api.provider.domain.LemujiPayDo" >
+        insert into znjf_lemuji_pay(
+        order_no,
+        transaction_no,
+        payee_account_name,
+        payee_account_no,
+        payee_merchant_no,
+        transaction_amount,
+        transaction_type,
+        pay_status,
+        transaction_desc,
+        loan_draw_uuid,
+        user_id,
+        transaction_time
+        )
+        values
+        (
+            #{orderNo,jdbcType=VARCHAR},
+            #{transactionNo,jdbcType=VARCHAR},
+            #{payeeAccountName,jdbcType=VARCHAR},
+            #{payeeAccountNo,jdbcType=VARCHAR},
+            #{payeeMerchantNo,jdbcType=VARCHAR},
+            #{transactionAmount,jdbcType=DECIMAL},
+            #{transactionType,jdbcType=DECIMAL},
+            #{payStatus,jdbcType=DECIMAL},
+            #{transactionDesc,jdbcType=VARCHAR},
+            #{loanDrawUuid,jdbcType=VARCHAR},
+            #{userId,jdbcType=DECIMAL},
+            #{transactionTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <select id="getRepaymentInfo" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+        select r.repayment_account as repaymentAccount,r.repayment_time as repaymentTime,
+        r.capital as capital,r.manage_fee as manageFee,r.interest as interest
+        from znjf_fund f
+        inner join znjf_fund_borrow_rel b on b.fund_id = f.id
+        inner join rd_borrow_repayment r on r.borrow_id = b.borrow_id
+        where f.order_no=#{orderNo,jdbcType=VARCHAR}
+        and f.channel_from = 1
+    </select>
 </mapper>

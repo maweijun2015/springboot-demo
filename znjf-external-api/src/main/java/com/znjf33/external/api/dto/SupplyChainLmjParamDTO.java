@@ -20,6 +20,50 @@ public class SupplyChainLmjParamDTO implements Serializable {
      */
     private String loanDrawUuid;
     /**
+     * 外部订单号
+     */
+    private String externalId;
+    /**
+     * 支付code码   000000:成功  -1:失败
+     */
+    private String payCode;
+    /**
+     * 支付回调信息
+     */
+    private String payMsg;
+    /**
+     * 支付类型   transfer:企业间转帐    payTB:付款到银行帐号    chargeFB:充值接口
+     */
+    private String payType;
+    /**
+     * 乐木几接入识别编码
+     */
+    private String lmjIdentifyPartnerid;
+    /**
+     * 翼支付企业间转账接口
+     */
+    private String quanwangtongYizhifuTransfer;
+    /**
+     * 翼支付充值接口
+     */
+    private String quanwangtongYizhifuChargefb;
+    /**
+     * 翼支付接入识别编码
+     */
+    private String quanwangtongYizhifuPartnerid;
+    /**
+     * 翼支付放宽到银行卡接口
+     */
+    private String quanwangtongYizhifuPaytb;
+    /**
+     * 乐木几地址
+     */
+    private String lmjUrl;
+    /**
+     * 乐木几开放秘钥
+     */
+    private String lmjApiSecretKey;
+    /**
      * 上传下载地址
      */
     private String realPath;
@@ -121,6 +165,94 @@ public class SupplyChainLmjParamDTO implements Serializable {
      * 还款日期
      */
     private Date entrustEndDate;
+
+    public String getQuanwangtongYizhifuPaytb() {
+        return quanwangtongYizhifuPaytb;
+    }
+
+    public void setQuanwangtongYizhifuPaytb(String quanwangtongYizhifuPaytb) {
+        this.quanwangtongYizhifuPaytb = quanwangtongYizhifuPaytb;
+    }
+
+    public String getQuanwangtongYizhifuChargefb() {
+        return quanwangtongYizhifuChargefb;
+    }
+
+    public void setQuanwangtongYizhifuChargefb(String quanwangtongYizhifuChargefb) {
+        this.quanwangtongYizhifuChargefb = quanwangtongYizhifuChargefb;
+    }
+
+    public String getLmjUrl() {
+        return lmjUrl;
+    }
+
+    public void setLmjUrl(String lmjUrl) {
+        this.lmjUrl = lmjUrl;
+    }
+
+    public String getPayMsg() {
+        return payMsg;
+    }
+
+    public void setPayMsg(String payMsg) {
+        this.payMsg = payMsg;
+    }
+
+    public String getQuanwangtongYizhifuPartnerid() {
+        return quanwangtongYizhifuPartnerid;
+    }
+
+    public void setQuanwangtongYizhifuPartnerid(String quanwangtongYizhifuPartnerid) {
+        this.quanwangtongYizhifuPartnerid = quanwangtongYizhifuPartnerid;
+    }
+
+    public String getLmjApiSecretKey() {
+        return lmjApiSecretKey;
+    }
+
+    public void setLmjApiSecretKey(String lmjApiSecretKey) {
+        this.lmjApiSecretKey = lmjApiSecretKey;
+    }
+
+    public String getLmjIdentifyPartnerid() {
+        return lmjIdentifyPartnerid;
+    }
+
+    public void setLmjIdentifyPartnerid(String lmjIdentifyPartnerid) {
+        this.lmjIdentifyPartnerid = lmjIdentifyPartnerid;
+    }
+
+    public String getQuanwangtongYizhifuTransfer() {
+        return quanwangtongYizhifuTransfer;
+    }
+
+    public void setQuanwangtongYizhifuTransfer(String quanwangtongYizhifuTransfer) {
+        this.quanwangtongYizhifuTransfer = quanwangtongYizhifuTransfer;
+    }
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public String getPayCode() {
+        return payCode;
+    }
+
+    public void setPayCode(String payCode) {
+        this.payCode = payCode;
+    }
 
     public Date getEntrustEndDate() {
         return entrustEndDate;

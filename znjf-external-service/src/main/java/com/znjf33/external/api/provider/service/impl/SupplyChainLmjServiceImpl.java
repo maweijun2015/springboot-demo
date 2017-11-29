@@ -2,27 +2,21 @@ package com.znjf33.external.api.provider.service.impl;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.znjf33.common.service.common.Constants;
 import com.znjf33.common.service.common.Message;
-import com.znjf33.common.utils.DateUtil;
-import com.znjf33.common.utils.HclientFileUtil;
-import com.znjf33.common.utils.OrderNoUtils;
-import com.znjf33.common.utils.StringUtil;
+import com.znjf33.common.utils.*;
 import com.znjf33.common.utils.constant.enums.EnumUploadImgType;
-import com.znjf33.external.api.dto.OrderinfoDTO;
-import com.znjf33.external.api.dto.SupplyChainLmjParamDTO;
-import com.znjf33.external.api.dto.SupplyChainLmjReimbursementParamDTO;
-import com.znjf33.external.api.dto.SupplyChainLmjResultDTO;
+import com.znjf33.external.api.dto.*;
+import com.znjf33.external.api.provider.common.RemoteConstants;
 import com.znjf33.external.api.provider.common.TableConstants;
-import com.znjf33.external.api.provider.domain.SupplyChainLmjParamDO;
-import com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO;
-import com.znjf33.external.api.provider.domain.ZnjfFundAttachmentDO;
+import com.znjf33.external.api.provider.domain.*;
 import com.znjf33.external.api.provider.mapper.SupplyChainLmjMapper;
 import com.znjf33.external.api.provider.protocol.LoanProtocol;
+import com.znjf33.external.api.provider.remote.LemujiAPI;
+import com.znjf33.external.api.provider.remote.LemujiNotifier;
 import com.znjf33.external.api.service.SupplyChainLmjService;
 import com.znjf33.investment.api.dto.LMJTransferDto;
 import com.znjf33.investment.api.service.BorrowUpdateService;
@@ -104,10 +98,10 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         }
         //支用申请信息录入
         supplyChainLmjParamDO.setDealNo(OrderNoUtils.getSerialNumber());
-        supplyChainLmjParamDO.setFundStatus(TableConstants.znjf_fund_status_no_pay);
-        supplyChainLmjParamDO.setMoneyStatus(TableConstants.znjf_fund_money_status_no);
-        supplyChainLmjParamDO.setProcessStatus(TableConstants.znjf_fund_process_status_no);
-        supplyChainLmjParamDO.setChannelFrom(TableConstants.znjf_fund_data_from_lmj);
+        supplyChainLmjParamDO.setFundStatus(TableConstants.ZNJF_FUND_STATUS_NO_PAY);
+        supplyChainLmjParamDO.setMoneyStatus(TableConstants.ZNJF_FUND_MONEY_STATUS_NO);
+        supplyChainLmjParamDO.setProcessStatus(TableConstants.ZNJF_FUND_PROCESS_STATUS_NO);
+        supplyChainLmjParamDO.setChannelFrom(TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
         supplyChainLmjParamDO.setRepaymentDateApplied(DateUtil.rollDay(
                 DateUtil.getDateByFullDateStrOther(supplyChainLmjParamDO.getLoanDrawDate()),supplyChainLmjParamDO.getPeriod()));
         supplyChainLmjMapper.saveApplyLoan(supplyChainLmjParamDO);
@@ -153,7 +147,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             //状态更新
             LOGGER.info("************更新fund表状态******************");
             supplyChainLmjMapper.updateZnjfFundStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.MONEY_STATUS_PAY,
-                    TableConstants.znjf_fund_data_from_lmj);
+                    TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
             LOGGER.info("状态更新成功");
         }catch (Exception e){
             LOGGER.error(supplyChainLmjParamDTO.getUserId() + " 签约失败" + supplyChainLmjParamDTO.getLoanDrawUuid());
@@ -169,8 +163,8 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
     @Override
     public void updateZnjfFundProcessStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
         LOGGER.info("更新fund状态 loanDrawUuid = " + supplyChainLmjParamDTO.getLoanDrawUuid());
-        supplyChainLmjMapper.updateZnjfFundProcessStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.znjf_fund_process_status_error,
-                TableConstants.znjf_fund_data_from_lmj);
+        supplyChainLmjMapper.updateZnjfFundProcessStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.ZNJF_FUND_PROCESS_STATUS_ERROR,
+                TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
     }
 
     /**
@@ -249,10 +243,10 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
     private SupplyChainLmjResultDTO getBorrowInfo(Integer userId,String loanDrawUuid) {
         LOGGER.info("************获取标的信息******************");
         SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
-        Integer countFundsToday = supplyChainLmjMapper.countFundsToday(userId,TableConstants.znjf_fund_data_from_lmj,
+        Integer countFundsToday = supplyChainLmjMapper.countFundsToday(userId,TableConstants.ZNJF_FUND_DATA_FROM_LMJ,
                 TableConstants.MONEY_STATUS_PAY);
         supplyChainLmjResultDTO.setCountFundsToday(countFundsToday);
-        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnfFundByOrderNo(userId,TableConstants.znjf_fund_data_from_lmj,loanDrawUuid);
+        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnfFundByOrderNo(userId,TableConstants.ZNJF_FUND_DATA_FROM_LMJ,loanDrawUuid);
         if (supplyChainLmjResultDO == null){
             return null;
         }
@@ -267,16 +261,238 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
      */
     @Transactional(rollbackFor = Throwable.class)
     @Override
-    public void getReimbursementRegistration(SupplyChainLmjReimbursementParamDTO supplyChainLmjReimbursementParamDTO) {
+    public boolean getReimbursementRegistration(SupplyChainLmjReimbursementParamDTO supplyChainLmjReimbursementParamDTO) {
         LOGGER.info("还款登记信息");
-        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getUserInfo(supplyChainLmjReimbursementParamDTO.getLoanAppUuid());
-        Integer userId = supplyChainLmjResultDO.getUserId();
-        supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfFundByUserId(userId,supplyChainLmjReimbursementParamDTO.getLoanDrawUuid());
+        SupplyChainLmjResultDO znjfLemujiPay =  supplyChainLmjMapper.getZnjfLemujiPayByUuid(supplyChainLmjReimbursementParamDTO.getLoanDrawUuid());
+        if (znjfLemujiPay == null){
+            return false;
+        }
+        SupplyChainLmjResultDO znjfFundBorrow = supplyChainLmjMapper.getZnjfFundByUserId(znjfLemujiPay.getUserId(),supplyChainLmjReimbursementParamDTO.getLoanDrawUuid());
+        if (znjfFundBorrow == null){
+            return false;
+        }
         String number = supplyChainLmjReimbursementParamDTO.getRepaymentDataDTOList().get(0).getNumber();
-        supplyChainLmjMapper.updateBorrowRepayment(userId,supplyChainLmjResultDO.getBorrowId(),number);
-        supplyChainLmjMapper.updateZnjfFundRepayStatus(userId,supplyChainLmjReimbursementParamDTO.getLoanDrawUuid(),
-                TableConstants.MONEY_STATUS_REPAYING);
+        //更新还款表第三方每一笔还款唯一编号
+        supplyChainLmjMapper.updateBorrowRepayment(znjfLemujiPay.getUserId(),znjfFundBorrow.getBorrowId(),number);
+        //还款,翼支付付款到银行卡
+        LemujiPayDo pay = getDoToPay(supplyChainLmjReimbursementParamDTO.getLoanDrawUuid(),znjfLemujiPay.getUserId(),"",
+                znjfLemujiPay.getTransactionAmount(), supplyChainLmjReimbursementParamDTO.getQuanwangtongName(),
+                supplyChainLmjReimbursementParamDTO.getQuanwangtongACCOUNT(),LemujiPayDo.PAY_TYPE_TO_BANKACCOUNT,
+                "项目还款:"+OrderNoUtils.getSerialNumber());
+        Map<String,String> params = getToPayParamsTwo(supplyChainLmjReimbursementParamDTO.getQuanwangtongYizhifuPartnerid(),pay.getTransactionAmount(),
+                pay.getOrderNo(),pay.getTransactionNo());
+        pay.setTransactionDesc(JSON.toJSONString(params));
+        supplyChainLmjMapper.saveZnjfLemujiPay(pay);
+        LemujiNotifier.payPushPaytb(supplyChainLmjReimbursementParamDTO.getQuanwangtongYizhifuPaytb(),params,supplyChainLmjReimbursementParamDTO.getLmjApiSecretKey(),
+                pay.getOrderNo(),supplyChainLmjReimbursementParamDTO.getQuanwangtongYizhifuPartnerid());
+        return true;
     }
+
+    /**
+     * 获取乐木几翼支付成功与否回调
+     * @return
+     */
+    @Transactional(rollbackFor = Throwable.class)
+    @Override
+    public SupplyChainLmjResultDTO getCallbackPayStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO) {
+        LOGGER.info("获取乐木几翼支付成功与否回调 externalId = {}",supplyChainLmjParamDTO.getExternalId() );
+        SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
+        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfLemujiPayByOrderId(supplyChainLmjParamDTO.getExternalId());
+        if(supplyChainLmjResultDO == null){
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_ACCOUNT_NOT_EXIST.code());
+            return supplyChainLmjResultDTO;
+        }
+        SupplyChainLmjResultDO znjfExternalUser = supplyChainLmjMapper.getZnjfExternalUserByUserId(supplyChainLmjResultDO.getUserId());
+        if (!"000000".equals(supplyChainLmjParamDTO.getPayCode())){
+            LOGGER.error("getCallbackPayStatus(),乐木几回调code不是000000,code={},type={},externalId={},msg={}",supplyChainLmjParamDTO.getPayCode(),
+                    supplyChainLmjParamDTO.getPayType(),supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getPayMsg());
+            if (supplyChainLmjResultDO.getRetryNum() >=3){
+                //重发次数大于3次
+                supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_RETRY_NUM_THREE.code());
+                return supplyChainLmjResultDTO;
+            }
+            //更新失败状态
+            supplyChainLmjMapper.updateZnjfLemujiPayStatus(LemujiPayDo.PAY_STATUS_FAIL,supplyChainLmjParamDTO.getPayMsg(),supplyChainLmjParamDTO.getExternalId());
+            if ("chargeFB".equals(supplyChainLmjParamDTO.getPayType())){
+                //重发充值到企业翼支付
+                callWingToPayChargeFb(supplyChainLmjParamDTO,supplyChainLmjResultDO.getTransactionAmount(), supplyChainLmjParamDTO.getExternalId());
+            }else if ("transfer".equals(supplyChainLmjParamDTO.getPayType())){
+                //重发企业间转账
+                callWingToPayTransferFail(supplyChainLmjParamDTO,supplyChainLmjResultDO, znjfExternalUser, supplyChainLmjParamDTO.getExternalId());
+            }else if ("payTB".equals(supplyChainLmjParamDTO.getPayType())){
+                //重发放款到银行卡
+                callWingToPayPayTbFail(supplyChainLmjParamDTO, supplyChainLmjParamDTO.getExternalId(), supplyChainLmjResultDO.getTransactionAmount());
+            }
+            return supplyChainLmjResultDTO;
+        }
+        //更新znjf_lemuji_pay表状态
+        supplyChainLmjMapper.updateZnjfLemujiPayStatus(LemujiPayDo.PAY_STATUS_SUCCESS,supplyChainLmjParamDTO.getPayMsg(),supplyChainLmjParamDTO.getExternalId());
+        //充值接口回调
+        if ("chargeFB".equals(supplyChainLmjParamDTO.getPayType())){
+            //调用企业间转帐接口
+            callWingToPayTransferSuccess(supplyChainLmjParamDTO, supplyChainLmjResultDO, znjfExternalUser);
+        }
+        //企业间转帐接口回调
+        if ("transfer".equals(supplyChainLmjParamDTO.getPayType())){
+            SupplyChainLmjResultDO  repaymentInfo = supplyChainLmjMapper.getRepaymentInfo(supplyChainLmjResultDO.getLoanDrawUuid());
+            //调用乐木几放款接口
+            callLmjLending(supplyChainLmjParamDTO, supplyChainLmjResultDO, znjfExternalUser, repaymentInfo);
+        }
+        //付款到银行账户接口回调
+        if ("payTB".equals(supplyChainLmjParamDTO.getPayType())){
+            SupplyChainLmjResultDO znjfFundByUserId = supplyChainLmjMapper.getZnjfFundByUserId(supplyChainLmjResultDO.getUserId(),
+                    supplyChainLmjResultDO.getLoanDrawUuid());
+            supplyChainLmjMapper.updateBorrowRepaymentStatus(supplyChainLmjResultDO.getUserId(),znjfFundByUserId.getBorrowId());
+            supplyChainLmjMapper.updateZnjfFundRepayStatus(supplyChainLmjResultDO.getUserId(),supplyChainLmjResultDO.getLoanDrawUuid(),
+                    TableConstants.MONEY_STATUS_REPAYING);
+            LOGGER.info("付款到银行账户接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
+                    supplyChainLmjResultDO.getUserId());
+        }
+        return supplyChainLmjResultDTO;
+    }
+
+    /**
+     * 翼支付充值接口-重发
+     */
+    private void callWingToPayChargeFb(SupplyChainLmjParamDTO supplyChainLmjParamDTO,long transactionAmount,String orderNo){
+        Map<String,String> params = getToPayParamsTwo(supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid(),transactionAmount,
+                orderNo,OrderNoUtils.getSerialNumber());
+        LemujiNotifier.payPushChargeFb(supplyChainLmjParamDTO.getQuanwangtongYizhifuChargefb(),params,supplyChainLmjParamDTO.getLmjApiSecretKey(),
+                supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
+        LOGGER.info("翼支付充值接口-重发回调成功,externalId={}",supplyChainLmjParamDTO.getExternalId());
+    }
+
+    /**
+     * 翼支付放款到银行卡接口-重发
+     */
+    private void callWingToPayPayTbFail(SupplyChainLmjParamDTO supplyChainLmjParamDTO,String orderNo,long transactionAmount){
+        //翼支付付款到银行卡
+        Map<String,String> params = getToPayParamsTwo(supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid(),transactionAmount,
+                orderNo,OrderNoUtils.getSerialNumber());
+        LemujiNotifier.payPushPaytb(supplyChainLmjParamDTO.getQuanwangtongYizhifuPaytb(),params,supplyChainLmjParamDTO.getLmjApiSecretKey(),
+                orderNo,supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
+        LOGGER.info("翼支付放款到银行卡接口-重发回调成功,externalId={}",supplyChainLmjParamDTO.getExternalId());
+    }
+
+    /**
+     * 翼支付企业间转账接口-第一次
+     */
+    private void callWingToPayTransferSuccess(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
+                                       SupplyChainLmjResultDO znjfExternalUser){
+        LemujiPayDo pay =  getDoToPay(supplyChainLmjResultDO.getLoanDrawUuid(),supplyChainLmjResultDO.getUserId(),znjfExternalUser.getExtMerchants(),
+                supplyChainLmjResultDO.getTransactionAmount(), "","",LemujiPayDo.PAY_TYPE_TO_FINANCER,"");
+        Map<String,String>  params = getToPayParams(supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid(),pay.getPayeeMerchantNo(),
+                pay.getTransactionAmount(),
+                pay.getOrderNo(),pay.getTransactionNo(),pay.getTransactionTime());
+        pay.setTransactionDesc(JSON.toJSONString(params));
+        supplyChainLmjMapper.saveZnjfLemujiPay(pay);
+        LemujiNotifier.payPushTransfer(supplyChainLmjParamDTO.getQuanwangtongYizhifuTransfer(),params,supplyChainLmjParamDTO.getLmjApiSecretKey(),
+                supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
+        LOGGER.info("充值接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
+                supplyChainLmjResultDO.getUserId());
+    }
+
+    /**
+     * 翼支付企业间转账接口-重发
+     */
+    private void callWingToPayTransferFail(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
+                                       SupplyChainLmjResultDO znjfExternalUser,String orderNo){
+        Map<String,String>  params = getToPayParams(supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid(),znjfExternalUser.getExtMerchants(),
+                supplyChainLmjResultDO.getTransactionAmount(),orderNo,OrderNoUtils.getSerialNumber(),DateUtil.getNow());
+        LemujiNotifier.payPushTransfer(supplyChainLmjParamDTO.getQuanwangtongYizhifuTransfer(),params,supplyChainLmjParamDTO.getLmjApiSecretKey(),
+                supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
+        LOGGER.info("翼支付企业间转账接口-重发回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
+                supplyChainLmjResultDO.getUserId());
+    }
+
+    /**
+     * 翼支付转换
+     */
+    private LemujiPayDo getDoToPay(String LoanDrawUuid,int userId,String extMerchants,long transactionAmount,
+                                   String payeeAccountName,String payeeAccountNo,int transactionType,String remark) {
+        LemujiPayDo pay = new LemujiPayDo();
+        pay.setOrderNo(OrderNoUtils.getSerialNumber());
+        pay.setTransactionNo(OrderNoUtils.getSerialNumber());
+        pay.setLoanDrawUuid(LoanDrawUuid);
+        pay.setUserId(userId);
+        pay.setPayeeMerchantNo(extMerchants);
+        pay.setTransactionAmount(transactionAmount);
+        pay.setTransactionTime(DateUtil.getNow());
+        pay.setTransactionType(transactionType);
+
+        pay.setPayeeAccountName(payeeAccountName);
+        pay.setPayeeAccountNo(payeeAccountNo);
+        pay.setRemark(remark);
+        pay.setPayStatus(0);
+        return pay;
+    }
+
+    /**
+     * 转换翼支付参数2
+     */
+    private Map<String,String>  getToPayParamsTwo(String partnerId,long transactionAmount,
+                                                  String orderNo,String transactionNo) {
+        Map<String,String> params = new HashMap<>();
+        params.put("PARTNERID",partnerId);
+        params.put("externalId",orderNo);
+        params.put("transactionAmount", String.valueOf(transactionAmount));
+        params.put("reqSeq",transactionNo);
+        params.put("trsMemo","");
+        return params;
+    }
+
+    /**
+     * 转换翼支付参数
+     */
+    private Map<String,String>  getToPayParams(String partnerId,String payeeMerchantNo,long transactionAmount,
+                                               String orderNo,String transactionNo,Date transactionTime) {
+        Map<String,String> params = new HashMap<>();
+        params.put("PARTNERID",partnerId);
+        params.put("PAYEECODE",payeeMerchantNo);
+        params.put("AREACODE","330000");
+        params.put("TXNAMOUNT", String.valueOf(transactionAmount));
+        params.put("ORDERSEQ",orderNo);
+        params.put("TRANSSEQ",transactionNo);
+        params.put("TRADETIME",DateUtil.dateStr3(transactionTime));
+        params.put("MARK1","");
+        return params;
+    }
+
+    /**
+     * 调用乐木几放款接口
+     */
+    private void callLmjLending(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
+                                SupplyChainLmjResultDO znjfExternalUser,SupplyChainLmjResultDO  repaymentInfo){
+        try {
+            LemujiLoanNotifierDTO notifierModel = new LemujiLoanNotifierDTO();
+            notifierModel.setLoanAppUuid(znjfExternalUser.getLoanAppUuid());
+            notifierModel.setLoanDrawUuid(supplyChainLmjResultDO.getLoanDrawUuid());
+            notifierModel.setReqFlowNo(OrderNoUtils.getSerialNumber());
+            notifierModel.setStatus("YES");
+            notifierModel.setComment("ok");
+
+            LemujiRepaymentDTO repayment = new LemujiRepaymentDTO();
+            repayment.setRepaymentAmount(String.format("%.2f",repaymentInfo.getRepaymentAccount()) );
+            repayment.setRepaymentDate(DateUtil.dateStr7(repaymentInfo.getRepaymentTime()));
+            repayment.setRepaymentPrincipal(String.format("%.2f",repaymentInfo.getCapital()) );
+            BigDecimal manageFee = new BigDecimal(repaymentInfo.getManageFee());
+            BigDecimal interest = new BigDecimal(repaymentInfo.getInterest());
+            repayment.setRepaymentInterest(String.format("%.2f",manageFee.add(interest).doubleValue()) );
+            repayment.setRepaymentIssue("1");
+
+            List<LemujiRepaymentDTO> repayments = new ArrayList<>();
+            repayments.add(repayment);
+            notifierModel.setRepaymentList(repayments);
+            LemujiNotifier.push(LemujiAPI.LOAN_SUCCESS_NOTIFIER,notifierModel,RemoteConstants.QUANWANGTONG_LENDING_TO_INFORM,
+                    supplyChainLmjParamDTO.getLmjApiSecretKey(),supplyChainLmjParamDTO.getLmjUrl(),supplyChainLmjParamDTO.getLmjIdentifyPartnerid());
+            LOGGER.info("企业间转帐接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
+                    supplyChainLmjResultDO.getUserId());
+        } catch (Exception ex) {
+            LOGGER.error("放款 - 推送资金状态失败：" + ex.getMessage());
+        }
+    }
+
+
 
 
     private List<ZnjfFundAttachmentDO> listZnjfFundAttachment(List<OrderinfoDTO> orderinfoDTOs,
