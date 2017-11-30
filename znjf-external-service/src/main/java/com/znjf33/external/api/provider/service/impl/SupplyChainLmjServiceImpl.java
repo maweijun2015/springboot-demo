@@ -334,6 +334,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             //调用企业间转帐接口
             Map<String,String> params = callWingToPayTransferSuccess(supplyChainLmjParamDTO, supplyChainLmjResultDO, znjfExternalUser);
             supplyChainLmjResultDTO.setParams(params);
+            supplyChainLmjResultDTO.setCode(Message.INFO_SUCCESS.code());
             return supplyChainLmjResultDTO;
         }
         //企业间转帐接口回调
@@ -352,6 +353,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             LOGGER.info("付款到银行账户接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
                     supplyChainLmjResultDO.getUserId());
         }
+        supplyChainLmjResultDTO.setCode(Message.INFO_SUCCESS.code());
         return supplyChainLmjResultDTO;
     }
 
