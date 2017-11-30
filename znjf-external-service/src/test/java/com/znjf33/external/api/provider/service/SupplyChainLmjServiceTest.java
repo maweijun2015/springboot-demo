@@ -8,6 +8,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author maweijun
  * @description
@@ -19,7 +22,7 @@ public class SupplyChainLmjServiceTest extends JunitBase {
     private SupplyChainLmjService supplyChainLmjService;
 
     /**
-     * 获取乐木几翼支付成功与否回调-充值接口回调
+     * 获取乐木几翼支付成功与否回调-充值数据保存
      */
     @Test
     public void getCallbackPayStatus(){
@@ -32,6 +35,32 @@ public class SupplyChainLmjServiceTest extends JunitBase {
         supplyChainLmjParamDTO.setQuanwangtongYizhifuPartnerid("e40dfb3c25fa31ce3a226695414cbbc3");
         SupplyChainLmjResultDTO b = supplyChainLmjService.getCallbackPayStatus(supplyChainLmjParamDTO);
         Assert.assertNotNull(b);
+    }
+
+    /**
+     * 获取乐木几翼支付成功与否回调-充值接企业转账发送
+     */
+    @Test
+    public void getCallbackPayStatusSend(){
+        SupplyChainLmjParamDTO supplyChainLmjParamDTO = new SupplyChainLmjParamDTO();
+        supplyChainLmjParamDTO.setExternalId("1711271313838686");
+        supplyChainLmjParamDTO.setPayCode("000000");
+        supplyChainLmjParamDTO.setPayType("chargeFB");
+        Map<String,String> params = new HashMap<>();
+        params.put("PAYEECODE","0000000000101652");
+        params.put("PARTNERID","e40dfb3c25fa31ce3a226695414cbbc3");
+        params.put("TRADETIME","20171130085155");
+        params.put("AREACODE","330000");
+        params.put("ORDERSEQ","1711300807654130");
+        params.put("TRANSSEQ","1711301711033297");
+        params.put("TXNAMOUNT","300");
+        params.put("MARK1","");
+        supplyChainLmjParamDTO.setParams(params);
+        supplyChainLmjParamDTO.setQuanwangtongYizhifuTransfer("http://www.lemuji.com/qwtys/api/bestpay/transfer_ZNJF.php");
+        supplyChainLmjParamDTO.setLmjApiSecretKey("77ed904243c2fde0fb309252e98a960c");
+        supplyChainLmjParamDTO.setQuanwangtongYizhifuPartnerid("e40dfb3c25fa31ce3a226695414cbbc3");
+        supplyChainLmjService.sendPayTransfer(supplyChainLmjParamDTO);
+        Assert.assertTrue(true);
     }
 
     /**

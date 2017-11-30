@@ -332,7 +332,9 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         //充值接口回调
         if ("chargeFB".equals(supplyChainLmjParamDTO.getPayType())){
             //调用企业间转帐接口
-            callWingToPayTransferSuccess(supplyChainLmjParamDTO, supplyChainLmjResultDO, znjfExternalUser);
+            Map<String,String> params = callWingToPayTransferSuccess(supplyChainLmjParamDTO, supplyChainLmjResultDO, znjfExternalUser);
+            supplyChainLmjResultDTO.setParams(params);
+            return supplyChainLmjResultDTO;
         }
         //企业间转帐接口回调
         if ("transfer".equals(supplyChainLmjParamDTO.getPayType())){
@@ -379,27 +381,54 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
     /**
      * 翼支付企业间转账接口-第一次
      */
-    private void callWingToPayTransferSuccess(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
+    private Map<String,String> callWingToPayTransferSuccess(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
                                        SupplyChainLmjResultDO znjfExternalUser){
-        Map<String,String> params = callWingToPayTransferSuccessToParams(supplyChainLmjParamDTO,supplyChainLmjResultDO,znjfExternalUser);
-        LemujiNotifier.payPushTransfer(supplyChainLmjParamDTO.getQuanwangtongYizhifuTransfer(),params,supplyChainLmjParamDTO.getLmjApiSecretKey(),
-                supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
-        LOGGER.info("充值接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
-                supplyChainLmjResultDO.getUserId());
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    private Map<String,String> callWingToPayTransferSuccessToParams(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
-                                                      SupplyChainLmjResultDO znjfExternalUser){
         LemujiPayDo pay =  getDoToPay(supplyChainLmjResultDO.getLoanDrawUuid(),supplyChainLmjResultDO.getUserId(),znjfExternalUser.getExtMerchants(),
                 supplyChainLmjResultDO.getTransactionAmount(), "","",LemujiPayDo.PAY_TYPE_TO_FINANCER,"");
         Map<String,String>  params = getToPayParams(supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid(),pay.getPayeeMerchantNo(),
-                pay.getTransactionAmount(),
-                pay.getOrderNo(),pay.getTransactionNo(),pay.getTransactionTime());
+                pay.getTransactionAmount(), pay.getOrderNo(),pay.getTransactionNo(),pay.getTransactionTime());
         pay.setTransactionDesc(JSON.toJSONString(params));
         supplyChainLmjMapper.saveZnjfLemujiPay(pay);
+        LOGGER.info("翼支付充值数据保存成功,externalId={}",supplyChainLmjParamDTO.getExternalId());
         return params;
     }
+
+
+    /**
+     * 翼支付企业间转账接口-第一次
+     * @param supplyChainLmjParamDTO
+     */
+    @Override
+    public void sendPayTransfer(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+        LemujiNotifier.payPushTransfer(supplyChainLmjParamDTO.getQuanwangtongYizhifuTransfer(),supplyChainLmjParamDTO.getParams(),supplyChainLmjParamDTO.getLmjApiSecretKey(),
+                supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
+        LOGGER.info("充值接口回调成功,externalId={}",supplyChainLmjParamDTO.getExternalId());
+    }
+
+//    /**
+//     * 翼支付企业间转账接口-第一次
+//     */
+//    private void callWingToPayTransferSuccess(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
+//                                              SupplyChainLmjResultDO znjfExternalUser){
+//        Map<String,String>  params = callWingToPayTransferSuccessToParams(supplyChainLmjParamDTO,supplyChainLmjResultDO,znjfExternalUser);
+//        LemujiNotifier.payPushTransfer(supplyChainLmjParamDTO.getQuanwangtongYizhifuTransfer(),params,supplyChainLmjParamDTO.getLmjApiSecretKey(),
+//                supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
+//        LOGGER.info("充值接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
+//                supplyChainLmjResultDO.getUserId());
+//    }
+
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    public Map<String,String> callWingToPayTransferSuccessToParams(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
+//                                                      SupplyChainLmjResultDO znjfExternalUser){
+//        LemujiPayDo pay =  getDoToPay(supplyChainLmjResultDO.getLoanDrawUuid(),supplyChainLmjResultDO.getUserId(),znjfExternalUser.getExtMerchants(),
+//                supplyChainLmjResultDO.getTransactionAmount(), "","",LemujiPayDo.PAY_TYPE_TO_FINANCER,"");
+//        Map<String,String>  params = getToPayParams(supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid(),pay.getPayeeMerchantNo(),
+//                pay.getTransactionAmount(),
+//                pay.getOrderNo(),pay.getTransactionNo(),pay.getTransactionTime());
+//        pay.setTransactionDesc(JSON.toJSONString(params));
+//        supplyChainLmjMapper.saveZnjfLemujiPay(pay);
+//        return params;
+//    }
 
     /**
      * 翼支付企业间转账接口-重发

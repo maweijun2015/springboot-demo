@@ -45,4 +45,9 @@ public interface SupplyChainLmjService {
      * @return
      */
     SupplyChainLmjResultDTO getCallbackPayStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
+    /**
+     * 翼支付企业间转账接口-第一次
+     * @param supplyChainLmjParamDTO
+     */
+    void sendPayTransfer(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
 }

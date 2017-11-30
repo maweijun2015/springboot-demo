@@ -3,6 +3,7 @@ package com.znjf33.external.api.dto;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author maweijun
@@ -165,6 +166,19 @@ public class SupplyChainLmjParamDTO implements Serializable {
      * 还款日期
      */
     private Date entrustEndDate;
+
+    /**
+     * 发送参数
+     */
+    private Map<String,String> params;
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
+    }
 
     public String getQuanwangtongYizhifuPaytb() {
         return quanwangtongYizhifuPaytb;
