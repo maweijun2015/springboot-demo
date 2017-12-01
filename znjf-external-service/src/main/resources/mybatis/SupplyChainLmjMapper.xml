@@ -173,6 +173,7 @@
     <select id="getZnjfLemujiPayByUuid" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
         select transaction_amount as transactionAmount,user_id as userId
         from znjf_lemuji_pay z where z.loan_draw_uuid=#{loanDrawUuid,jdbcType=VARCHAR}
+        and z.transaction_type = 1
     </select>
 
     <!-- 保存支付信息表-->
