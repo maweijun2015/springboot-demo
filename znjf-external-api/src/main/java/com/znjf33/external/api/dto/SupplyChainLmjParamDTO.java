@@ -133,6 +133,10 @@ public class SupplyChainLmjParamDTO implements Serializable {
      */
     private String agreementNo;
     /**
+     * 合同编号头
+     */
+    private String dealHeadNo;
+    /**
      * 借款人法人姓名
      */
     private String loanLegalUserName;
@@ -171,6 +175,14 @@ public class SupplyChainLmjParamDTO implements Serializable {
      * 发送参数
      */
     private Map<String,String> params;
+
+    public String getDealHeadNo() {
+        return dealHeadNo;
+    }
+
+    public void setDealHeadNo(String dealHeadNo) {
+        this.dealHeadNo = dealHeadNo;
+    }
 
     public Map<String, String> getParams() {
         return params;

@@ -51,6 +51,7 @@ public class LoanProtocol {
 
         data.put("protocolInfo",protocolInfo);
         data.put("agreementNo",supplyChainLmjParamDTO.getAgreementNo());
+        data.put("dealNoHead",supplyChainLmjParamDTO.getDealHeadNo());
         data.put("loanUserRealName",supplyChainLmjParamDTO.getLoanUserRealName());
 
 
