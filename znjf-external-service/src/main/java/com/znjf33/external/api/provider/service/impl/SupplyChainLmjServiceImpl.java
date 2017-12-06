@@ -120,6 +120,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
      * @param supplyChainLmjParamDTO
      * @return
      */
+    @Transactional
     @Override
     public void signatureFileForLmj(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
         try {
@@ -142,14 +143,13 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             lmjTransferDto.setLoanDuration(supplyChainLmjParamDTO.getDuration());
             lmjTransferDto.setBorrowUse(Constants.TAIAN1_BORROW_USE);
 
-            LOGGER.info("标的生成开始");
-            borrowUpdateService.addQuanwangtongBorrow(lmjTransferDto,supplyChainLmjParamDTO.getLoanDrawUuid(), Constants.SUPPLY_CHAIN_CHANNEL_FROM);
-            LOGGER.info("标的生成成功");
             //状态更新
             LOGGER.info("************更新fund表状态******************");
             supplyChainLmjMapper.updateZnjfFundStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.MONEY_STATUS_PAY,
                     TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
-            LOGGER.info("状态更新成功");
+            LOGGER.info("状态更新成功,标的生成开始");
+            borrowUpdateService.addQuanwangtongBorrow(lmjTransferDto,supplyChainLmjParamDTO.getLoanDrawUuid(), Constants.SUPPLY_CHAIN_CHANNEL_FROM);
+            LOGGER.info("标的生成成功");
         }catch (Exception e){
             LOGGER.error(supplyChainLmjParamDTO.getUserId() + " 签约失败" + supplyChainLmjParamDTO.getLoanDrawUuid());
             updateZnjfFundProcessStatus(supplyChainLmjParamDTO);
