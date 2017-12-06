@@ -570,8 +570,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         Date entrustEndDate = DateUtil.rollDay(nowTime, borrowInfo.getDuration());
         String dealNo = "ZJF" + DateUtil.getTimeYear(nowTime) + "JD-TA-6-" + supplyChainLmjParamDTO.getUserId() + "-"
                 + DateUtil.getTimeMonth(nowTime) + DateUtil.getTimeDay(nowTime)+ borrowInfo.getCountFundsToday();
-        String dealHeadNo = "ZJF" + DateUtil.getTimeYear(nowTime) + "JD-TA-6-" + supplyChainLmjParamDTO.getUserId() + "-"
-                + DateUtil.getTimeMonth(nowTime) + DateUtil.getTimeDay(nowTime)+ borrowInfo.getCountFundsToday();
+        String dealHeadNo = "ZJF" + DateUtil.getTimeYear(nowTime) + "FW-TA-6-";
         supplyChainLmjParamDTO.setAgreementNo(dealNo);
         supplyChainLmjParamDTO.setDealHeadNo(dealHeadNo);
         supplyChainLmjParamDTO.setLoanAmount(borrowInfo.getAmountApplied());
