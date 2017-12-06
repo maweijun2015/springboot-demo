@@ -47,12 +47,6 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
     private SupplyChainLmjMapper supplyChainLmjMapper;
 
     @Autowired
-    private UserSignatureService userSignatureService;
-
-    @Autowired
-    private LoanProtocol loanProtocol;
-
-    @Autowired
     private BorrowUpdateService borrowUpdateService;
 
     @Autowired
@@ -133,7 +127,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             LOGGER.info(supplyChainLmjParamDTO.getUserId() + " 签约开始" + supplyChainLmjParamDTO.getLoanDrawUuid());
             getBorrowSigningInfo(supplyChainLmjParamDTO);
             //E签宝签约
-            boolean signatureFileForLmj = signatureFileForLmjSignature(supplyChainLmjParamDTO);
+            boolean signatureFileForLmj = thirdPartyService.signatureFileForLmjSignature(supplyChainLmjParamDTO);
             if (!signatureFileForLmj){
                 LOGGER.error(supplyChainLmjParamDTO.getLoanDrawUuid() + " 签约失败 signatureFileForLmj == " +signatureFileForLmj);
                 updateZnjfFundProcessStatus(supplyChainLmjParamDTO);
@@ -176,54 +170,54 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
                 TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
     }
 
-    /**
-     * E签宝签约
-     * @param supplyChainLmjParamDTO
-     * @return
-     */
-    private boolean signatureFileForLmjSignature(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
-        String srcFile="";
-        String userResult="";
-        String platformResult = "";
-        String signResult = "";
-        try{
-            LOGGER.info("************电子签名开始******************");
-
-            //根据模板生产协议文件
-            loanProtocol.executor(supplyChainLmjParamDTO,supplyChainLmjParamDTO.getContent());
-
-            //生成的文件路径
-            srcFile = loanProtocol.getInPdfName();
-            LOGGER.info("user_id="+supplyChainLmjParamDTO.getUserId());
-            userResult = userSignatureService.userDoSignature(supplyChainLmjParamDTO.getUserId(), "乙方（电子签章）:", srcFile);
-            if(StringUtil.isNotBlank(userResult)){
-                platformResult = userSignatureService.platformDoSignature("丙方（电子签章）:", userResult);
-
-                if(StringUtil.isNotBlank(platformResult)){
-                    signResult = HclientFileUtil.uploadFileMethod(supplyChainLmjParamDTO.getImageServerUrl() + HclientFileUtil.UPLOAD_PATH,
-                                EnumUploadImgType.USERINFO.getValue(), new File(platformResult));
-
-                    UserSignatureDto borrowerUserSign = userSignatureService.getUserSignatureInfo(supplyChainLmjParamDTO.getUserId());
-                    userSignatureService.saveSignedFile(platformResult, "借款协议-" + supplyChainLmjParamDTO.getUserId(),
-                                new String[]{borrowerUserSign.getAccountId()});
-                    LOGGER.info("************电子签名结束******************");
-                }
-            }
-        }catch (Exception e){
-            LOGGER.error("****************电子签名失败****************",e);
-            return false;
-        }finally {
-            File file = new File(srcFile);
-            if(file.isFile() && file.exists()){
-                file.delete();
-            }
-            File userResultFile = new File(userResult);
-            if(userResultFile.isFile() && userResultFile.exists()){
-                userResultFile.delete();
-            }
-        }
-        return true;
-    }
+//    /**
+//     * E签宝签约
+//     * @param supplyChainLmjParamDTO
+//     * @return
+//     */
+//    private boolean signatureFileForLmjSignature(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+//        String srcFile="";
+//        String userResult="";
+//        String platformResult = "";
+//        String signResult = "";
+//        try{
+//            LOGGER.info("************电子签名开始******************");
+//
+//            //根据模板生产协议文件
+//            loanProtocol.executor(supplyChainLmjParamDTO,supplyChainLmjParamDTO.getContent());
+//
+//            //生成的文件路径
+//            srcFile = loanProtocol.getInPdfName();
+//            LOGGER.info("user_id="+supplyChainLmjParamDTO.getUserId());
+//            userResult = userSignatureService.userDoSignature(supplyChainLmjParamDTO.getUserId(), "乙方（电子签章）:", srcFile);
+//            if(StringUtil.isNotBlank(userResult)){
+//                platformResult = userSignatureService.platformDoSignature("丙方（电子签章）:", userResult);
+//
+//                if(StringUtil.isNotBlank(platformResult)){
+//                    signResult = HclientFileUtil.uploadFileMethod(supplyChainLmjParamDTO.getImageServerUrl() + HclientFileUtil.UPLOAD_PATH,
+//                                EnumUploadImgType.USERINFO.getValue(), new File(platformResult));
+//
+//                    UserSignatureDto borrowerUserSign = userSignatureService.getUserSignatureInfo(supplyChainLmjParamDTO.getUserId());
+//                    userSignatureService.saveSignedFile(platformResult, "借款协议-" + supplyChainLmjParamDTO.getUserId(),
+//                                new String[]{borrowerUserSign.getAccountId()});
+//                    LOGGER.info("************电子签名结束******************");
+//                }
+//            }
+//        }catch (Exception e){
+//            LOGGER.error("****************电子签名失败****************",e);
+//            return false;
+//        }finally {
+//            File file = new File(srcFile);
+//            if(file.isFile() && file.exists()){
+//                file.delete();
+//            }
+//            File userResultFile = new File(userResult);
+//            if(userResultFile.isFile() && userResultFile.exists()){
+//                userResultFile.delete();
+//            }
+//        }
+//        return true;
+//    }
 
     /**
      * 获取用户信息
