@@ -10,6 +10,8 @@
     <!-- 服务消费者接口 -->
     <dubbo:reference interface="com.znjf33.useraccount.api.service.UserSignatureService" id="userSignatureService" retries="0"  timeout="30000"/>
     <dubbo:reference interface="com.znjf33.investment.api.service.BorrowUpdateService" id="borrowUpdateService" retries="0"/>
+    <dubbo:reference interface="com.znjf33.general.api.service.NoticeTagService" id="noticeTagServiceImpl" retries="0" owner="mwj"/>
+    <dubbo:reference interface="com.znjf33.general.api.service.SystemConfigService" id="systemConfigService" retries="0"  owner="mwj"/>
 
     <!-- 声明需要暴露的服务接口 -->
     <dubbo:service interface="com.znjf33.external.api.service.SupplyChainLmjService" ref="supplyChainLmjServiceImpl" retries="0" timeout="80000" owner="mwj"/>
