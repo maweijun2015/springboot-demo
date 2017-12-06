@@ -10,6 +10,8 @@ import com.znjf33.common.service.common.Message;
 import com.znjf33.common.utils.*;
 import com.znjf33.common.utils.constant.enums.EnumUploadImgType;
 import com.znjf33.external.api.dto.*;
+import com.znjf33.external.api.provider.biz.ThirdPartyService;
+import com.znjf33.external.api.provider.common.Constant;
 import com.znjf33.external.api.provider.common.RemoteConstants;
 import com.znjf33.external.api.provider.common.TableConstants;
 import com.znjf33.external.api.provider.domain.*;
@@ -18,6 +20,7 @@ import com.znjf33.external.api.provider.protocol.LoanProtocol;
 import com.znjf33.external.api.provider.remote.LemujiAPI;
 import com.znjf33.external.api.provider.remote.LemujiNotifier;
 import com.znjf33.external.api.service.SupplyChainLmjService;
+import com.znjf33.general.api.service.NoticeService;
 import com.znjf33.investment.api.dto.LMJTransferDto;
 import com.znjf33.investment.api.service.BorrowUpdateService;
 import com.znjf33.useraccount.api.dto.UserSignatureDto;
@@ -51,6 +54,9 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
 
     @Autowired
     private BorrowUpdateService borrowUpdateService;
+
+    @Autowired
+    private ThirdPartyService thirdPartyService;
 
     /**
      * 支用申请
@@ -150,6 +156,8 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             LOGGER.info("状态更新成功,标的生成开始");
             borrowUpdateService.addQuanwangtongBorrow(lmjTransferDto,supplyChainLmjParamDTO.getLoanDrawUuid(), Constants.SUPPLY_CHAIN_CHANNEL_FROM);
             LOGGER.info("标的生成成功");
+            //邮件通知
+            thirdPartyService.sendEmail("全网通签约",supplyChainLmjParamDTO.getLoanUserRealName(), Constant.LEMUJI_SIGN_REMINDER);
         }catch (Exception e){
             LOGGER.error(supplyChainLmjParamDTO.getUserId() + " 签约失败" + supplyChainLmjParamDTO.getLoanDrawUuid());
             updateZnjfFundProcessStatus(supplyChainLmjParamDTO);
@@ -286,6 +294,8 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         supplyChainLmjMapper.saveZnjfLemujiPay(pay);
         LemujiNotifier.payPushPaytb(supplyChainLmjReimbursementParamDTO.getQuanwangtongYizhifuPaytb(),params,supplyChainLmjReimbursementParamDTO.getLmjApiSecretKey(),
                 pay.getOrderNo(),supplyChainLmjReimbursementParamDTO.getQuanwangtongYizhifuPartnerid());
+        //邮件通知
+        thirdPartyService.sendEmail("全网通还款","标的编号:"+znjfFundBorrow.getBorrowId(), Constant.LEMUJI_REPAY_REMINDER);
         return true;
     }
 
@@ -407,31 +417,6 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         LOGGER.info("充值接口回调成功,externalId={}",supplyChainLmjParamDTO.getExternalId());
     }
 
-//    /**
-//     * 翼支付企业间转账接口-第一次
-//     */
-//    private void callWingToPayTransferSuccess(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
-//                                              SupplyChainLmjResultDO znjfExternalUser){
-//        Map<String,String>  params = callWingToPayTransferSuccessToParams(supplyChainLmjParamDTO,supplyChainLmjResultDO,znjfExternalUser);
-//        LemujiNotifier.payPushTransfer(supplyChainLmjParamDTO.getQuanwangtongYizhifuTransfer(),params,supplyChainLmjParamDTO.getLmjApiSecretKey(),
-//                supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid());
-//        LOGGER.info("充值接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
-//                supplyChainLmjResultDO.getUserId());
-//    }
-
-//    @Transactional(propagation = Propagation.REQUIRES_NEW)
-//    public Map<String,String> callWingToPayTransferSuccessToParams(SupplyChainLmjParamDTO supplyChainLmjParamDTO,SupplyChainLmjResultDO supplyChainLmjResultDO,
-//                                                      SupplyChainLmjResultDO znjfExternalUser){
-//        LemujiPayDo pay =  getDoToPay(supplyChainLmjResultDO.getLoanDrawUuid(),supplyChainLmjResultDO.getUserId(),znjfExternalUser.getExtMerchants(),
-//                supplyChainLmjResultDO.getTransactionAmount(), "","",LemujiPayDo.PAY_TYPE_TO_FINANCER,"");
-//        Map<String,String>  params = getToPayParams(supplyChainLmjParamDTO.getQuanwangtongYizhifuPartnerid(),pay.getPayeeMerchantNo(),
-//                pay.getTransactionAmount(),
-//                pay.getOrderNo(),pay.getTransactionNo(),pay.getTransactionTime());
-//        pay.setTransactionDesc(JSON.toJSONString(params));
-//        supplyChainLmjMapper.saveZnjfLemujiPay(pay);
-//        return params;
-//    }
-
     /**
      * 翼支付企业间转账接口-重发
      */
@@ -525,12 +510,14 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             notifierModel.setRepaymentList(repayments);
             LemujiNotifier.push(LemujiAPI.LOAN_SUCCESS_NOTIFIER,notifierModel,RemoteConstants.QUANWANGTONG_LENDING_TO_INFORM,
                     supplyChainLmjParamDTO.getLmjApiSecretKey(),supplyChainLmjParamDTO.getLmjUrl(),supplyChainLmjParamDTO.getLmjIdentifyPartnerid());
-            LOGGER.info("企业间转帐接口回调成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
+            LOGGER.info("调用乐木几放款接口成功,externalId={},userId={}",supplyChainLmjParamDTO.getExternalId(),
                     supplyChainLmjResultDO.getUserId());
         } catch (Exception ex) {
             LOGGER.error("放款 - 推送资金状态失败：" + ex.getMessage());
         }
     }
+
+
 
 
 
