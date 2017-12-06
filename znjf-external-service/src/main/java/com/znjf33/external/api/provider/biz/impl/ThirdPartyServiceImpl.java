@@ -50,7 +50,7 @@ public class ThirdPartyServiceImpl implements ThirdPartyService{
         try{
             String emailAddress = systemConfigService.getConfigValue(Constant.LMJ_EMAIL_ADDRESS);
             noticeService.sendEmail(type, message, noticeTypeNid, emailAddress);
-            LOGGER.error("发送邮件成功,type={}",type);
+            LOGGER.info("发送邮件成功,type={}",type);
         }catch (Exception e){
             LOGGER.error("发送邮件失败,type={}",type);
         }
