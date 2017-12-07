@@ -46,7 +46,7 @@ public class LoanProtocol {
         protocolInfo.setLoanApr(supplyChainLmjParamDTO.getLoanApr());
         protocolInfo.setLoanStartDate(supplyChainLmjParamDTO.getLoanStartDate());
         protocolInfo.setLoanEndDate(supplyChainLmjParamDTO.getLoanEndDate());
-        protocolInfo.setLoanDuration(supplyChainLmjParamDTO.getDuration());
+        protocolInfo.setLoanDuration(supplyChainLmjParamDTO.getDuration()+"天");
         protocolInfo.setLoanUse(supplyChainLmjParamDTO.getLoanUse());
 
         data.put("protocolInfo",protocolInfo);

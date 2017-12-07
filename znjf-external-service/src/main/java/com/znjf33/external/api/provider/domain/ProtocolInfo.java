@@ -36,7 +36,7 @@ public class ProtocolInfo implements Serializable{
     /**
      * 借款期限
      */
-    private Integer loanDuration;
+    private String loanDuration;
     /**
      * 借款用途
      */
@@ -160,11 +160,11 @@ public class ProtocolInfo implements Serializable{
         this.loanApr = loanApr;
     }
 
-    public Integer getLoanDuration() {
+    public String getLoanDuration() {
         return loanDuration;
     }
 
-    public void setLoanDuration(Integer loanDuration) {
+    public void setLoanDuration(String loanDuration) {
         this.loanDuration = loanDuration;
     }
 
