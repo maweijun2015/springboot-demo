@@ -151,7 +151,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             borrowUpdateService.addQuanwangtongBorrow(lmjTransferDto,supplyChainLmjParamDTO.getLoanDrawUuid(), Constants.SUPPLY_CHAIN_CHANNEL_FROM);
             LOGGER.info("标的生成成功");
             //邮件通知
-            thirdPartyService.sendEmail("全网通签约",supplyChainLmjParamDTO.getLoanUserRealName(), Constant.LEMUJI_SIGN_REMINDER);
+            thirdPartyService.sendEmail("全网通签约",supplyChainLmjParamDTO.getLoanUserRealName(), Constant.LEMUJI_SIGN_REMINDER,Constant.LMJ_EMAIL_ADDRESS);
         }catch (Exception e){
             LOGGER.error(supplyChainLmjParamDTO.getUserId() + " 签约失败" + supplyChainLmjParamDTO.getLoanDrawUuid());
             updateZnjfFundProcessStatus(supplyChainLmjParamDTO);
@@ -169,55 +169,6 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         supplyChainLmjMapper.updateZnjfFundProcessStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.ZNJF_FUND_PROCESS_STATUS_ERROR,
                 TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
     }
-
-//    /**
-//     * E签宝签约
-//     * @param supplyChainLmjParamDTO
-//     * @return
-//     */
-//    private boolean signatureFileForLmjSignature(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
-//        String srcFile="";
-//        String userResult="";
-//        String platformResult = "";
-//        String signResult = "";
-//        try{
-//            LOGGER.info("************电子签名开始******************");
-//
-//            //根据模板生产协议文件
-//            loanProtocol.executor(supplyChainLmjParamDTO,supplyChainLmjParamDTO.getContent());
-//
-//            //生成的文件路径
-//            srcFile = loanProtocol.getInPdfName();
-//            LOGGER.info("user_id="+supplyChainLmjParamDTO.getUserId());
-//            userResult = userSignatureService.userDoSignature(supplyChainLmjParamDTO.getUserId(), "乙方（电子签章）:", srcFile);
-//            if(StringUtil.isNotBlank(userResult)){
-//                platformResult = userSignatureService.platformDoSignature("丙方（电子签章）:", userResult);
-//
-//                if(StringUtil.isNotBlank(platformResult)){
-//                    signResult = HclientFileUtil.uploadFileMethod(supplyChainLmjParamDTO.getImageServerUrl() + HclientFileUtil.UPLOAD_PATH,
-//                                EnumUploadImgType.USERINFO.getValue(), new File(platformResult));
-//
-//                    UserSignatureDto borrowerUserSign = userSignatureService.getUserSignatureInfo(supplyChainLmjParamDTO.getUserId());
-//                    userSignatureService.saveSignedFile(platformResult, "借款协议-" + supplyChainLmjParamDTO.getUserId(),
-//                                new String[]{borrowerUserSign.getAccountId()});
-//                    LOGGER.info("************电子签名结束******************");
-//                }
-//            }
-//        }catch (Exception e){
-//            LOGGER.error("****************电子签名失败****************",e);
-//            return false;
-//        }finally {
-//            File file = new File(srcFile);
-//            if(file.isFile() && file.exists()){
-//                file.delete();
-//            }
-//            File userResultFile = new File(userResult);
-//            if(userResultFile.isFile() && userResultFile.exists()){
-//                userResultFile.delete();
-//            }
-//        }
-//        return true;
-//    }
 
     /**
      * 获取用户信息
@@ -289,18 +240,54 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         LemujiNotifier.payPushPaytb(supplyChainLmjReimbursementParamDTO.getQuanwangtongYizhifuPaytb(),params,supplyChainLmjReimbursementParamDTO.getLmjApiSecretKey(),
                 pay.getOrderNo(),supplyChainLmjReimbursementParamDTO.getQuanwangtongYizhifuPartnerid());
         //邮件通知
-        thirdPartyService.sendEmail("全网通还款","标的编号:"+znjfFundBorrow.getBorrowId(), Constant.LEMUJI_REPAY_REMINDER);
+        thirdPartyService.sendEmail("全网通还款","标的编号:"+znjfFundBorrow.getBorrowId(), Constant.LEMUJI_REPAY_REMINDER,Constant.LMJ_EMAIL_FINANCIAL_ADDRESS);
         return true;
     }
 
     /**
-     * 获取乐木几翼支付成功与否回调
+     * 邮件异常通知
+     * @param type
+     * @param message
+     */
+    @Override
+    public void sendMail(String type,String message){
+        thirdPartyService.sendEmail(type,message, Constant.LEMUJI_EXCEPTION,Constant.EXCEPTION_REMINDER_EMAIL_ADDRESS);
+    }
+
+    /**
+     * 乐木几翼支付回调-失败处理-数据更新
      * @return
      */
-    @Transactional(rollbackFor = Throwable.class)
     @Override
-    public SupplyChainLmjResultDTO getCallbackPayStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO) {
-        LOGGER.info("获取乐木几翼支付成功与否回调 externalId = {}",supplyChainLmjParamDTO.getExternalId() );
+    public SupplyChainLmjResultDTO getCallbackPayStatusFail(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+        LOGGER.info("乐木几翼支付回调-失败处理 externalId = {},payType={}",supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getPayType());
+        SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
+        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfLemujiPayByOrderId(supplyChainLmjParamDTO.getExternalId());
+        if(supplyChainLmjResultDO == null){
+            LOGGER.info("账户不存在 externalId = {}",supplyChainLmjParamDTO.getExternalId() );
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_ACCOUNT_NOT_EXIST.code());
+            return supplyChainLmjResultDTO;
+        }
+        LOGGER.error("getCallbackPayStatus(),乐木几回调翼支付失败,code={},type={},externalId={},msg={},重试次数retyNum={}",
+                supplyChainLmjParamDTO.getPayCode(), supplyChainLmjParamDTO.getPayType(), supplyChainLmjParamDTO.getExternalId(),
+                supplyChainLmjParamDTO.getPayMsg(), supplyChainLmjResultDO.getRetryNum());
+        if (supplyChainLmjResultDO.getRetryNum() >=3){
+            //重发次数大于3次
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_RETRY_NUM_THREE.code());
+            return supplyChainLmjResultDTO;
+        }
+        //更新失败状态
+        supplyChainLmjMapper.updateZnjfLemujiPayStatus(LemujiPayDo.PAY_STATUS_FAIL,supplyChainLmjParamDTO.getPayMsg(),supplyChainLmjParamDTO.getExternalId());
+        return supplyChainLmjResultDTO;
+    }
+
+    /**
+     * 乐木几翼支付回调-失败处理-重试
+     * @return
+     */
+    @Override
+    public SupplyChainLmjResultDTO getCallbackPayStatusFailRetry(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+        LOGGER.info("乐木几翼支付回调-失败处理-重试 externalId = {},payType={}",supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getPayType());
         SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
         SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfLemujiPayByOrderId(supplyChainLmjParamDTO.getExternalId());
         if(supplyChainLmjResultDO == null){
@@ -309,30 +296,44 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             return supplyChainLmjResultDTO;
         }
         SupplyChainLmjResultDO znjfExternalUser = supplyChainLmjMapper.getZnjfExternalUserByUserId(supplyChainLmjResultDO.getUserId());
-        if (!"000000".equals(supplyChainLmjParamDTO.getPayCode())){
-            LOGGER.error("getCallbackPayStatus(),乐木几回调code不是000000,code={},type={},externalId={},msg={}",supplyChainLmjParamDTO.getPayCode(),
-                    supplyChainLmjParamDTO.getPayType(),supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getPayMsg());
-            if (supplyChainLmjResultDO.getRetryNum() >=3){
-                //重发次数大于3次
-                supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_RETRY_NUM_THREE.code());
-                return supplyChainLmjResultDTO;
-            }
-            //更新失败状态
-            supplyChainLmjMapper.updateZnjfLemujiPayStatus(LemujiPayDo.PAY_STATUS_FAIL,supplyChainLmjParamDTO.getPayMsg(),supplyChainLmjParamDTO.getExternalId());
-            if ("chargeFB".equals(supplyChainLmjParamDTO.getPayType())){
-                //重发充值到企业翼支付
-                callWingToPayChargeFb(supplyChainLmjParamDTO,supplyChainLmjResultDO.getTransactionAmount(), supplyChainLmjParamDTO.getExternalId());
-            }else if ("transfer".equals(supplyChainLmjParamDTO.getPayType())){
-                //重发企业间转账
-                callWingToPayTransferFail(supplyChainLmjParamDTO,supplyChainLmjResultDO, znjfExternalUser, supplyChainLmjParamDTO.getExternalId());
-            }else if ("payTB".equals(supplyChainLmjParamDTO.getPayType())){
-                //重发放款到银行卡
-                callWingToPayPayTbFail(supplyChainLmjParamDTO, supplyChainLmjParamDTO.getExternalId(), supplyChainLmjResultDO.getTransactionAmount());
-            }
+        if ("chargeFB".equals(supplyChainLmjParamDTO.getPayType())){
+            //重发充值到企业翼支付
+            callWingToPayChargeFb(supplyChainLmjParamDTO,supplyChainLmjResultDO.getTransactionAmount(), supplyChainLmjParamDTO.getExternalId());
+        }else if ("transfer".equals(supplyChainLmjParamDTO.getPayType())){
+            //重发企业间转账
+            callWingToPayTransferFail(supplyChainLmjParamDTO,supplyChainLmjResultDO, znjfExternalUser, supplyChainLmjParamDTO.getExternalId());
+        }else if ("payTB".equals(supplyChainLmjParamDTO.getPayType())){
+            //重发放款到银行卡
+            callWingToPayPayTbFail(supplyChainLmjParamDTO, supplyChainLmjParamDTO.getExternalId(), supplyChainLmjResultDO.getTransactionAmount());
+        }
+        return supplyChainLmjResultDTO;
+    }
+
+    /**
+     * 乐木几翼支付回调-处理成功-状态更新
+     * @return
+     */
+    @Override
+    public void updateCallbackPayStatusSuccess(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+        supplyChainLmjMapper.updateZnjfLemujiPayStatus(LemujiPayDo.PAY_STATUS_SUCCESS,supplyChainLmjParamDTO.getPayMsg(),supplyChainLmjParamDTO.getExternalId());
+    }
+
+    /**
+     * 乐木几翼支付回调
+     * @return
+     */
+    @Transactional
+    @Override
+    public SupplyChainLmjResultDTO getCallbackPayStatus(SupplyChainLmjParamDTO supplyChainLmjParamDTO) {
+        LOGGER.info("乐木几翼支付回调 externalId = {},payType={}",supplyChainLmjParamDTO.getExternalId(),supplyChainLmjParamDTO.getPayType());
+        SupplyChainLmjResultDTO supplyChainLmjResultDTO = new SupplyChainLmjResultDTO();
+        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfLemujiPayByOrderId(supplyChainLmjParamDTO.getExternalId());
+        if(supplyChainLmjResultDO == null){
+            LOGGER.info("账户不存在 externalId = {}",supplyChainLmjParamDTO.getExternalId() );
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_ACCOUNT_NOT_EXIST.code());
             return supplyChainLmjResultDTO;
         }
-        //更新znjf_lemuji_pay表状态
-        supplyChainLmjMapper.updateZnjfLemujiPayStatus(LemujiPayDo.PAY_STATUS_SUCCESS,supplyChainLmjParamDTO.getPayMsg(),supplyChainLmjParamDTO.getExternalId());
+        SupplyChainLmjResultDO znjfExternalUser = supplyChainLmjMapper.getZnjfExternalUserByUserId(supplyChainLmjResultDO.getUserId());
         //充值接口回调
         if ("chargeFB".equals(supplyChainLmjParamDTO.getPayType())){
             //调用企业间转帐接口

@@ -14,7 +14,7 @@ public interface ThirdPartyService {
      * @param message
      * @param noticeTypeNid
      */
-    void sendEmail(String type,String message,String noticeTypeNid);
+    void sendEmail(String type,String message,String noticeTypeNid,String lmjEmailAddress);
 
     /**
      * E签宝签约

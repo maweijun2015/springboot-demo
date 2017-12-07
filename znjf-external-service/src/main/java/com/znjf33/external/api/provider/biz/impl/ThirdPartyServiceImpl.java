@@ -46,9 +46,9 @@ public class ThirdPartyServiceImpl implements ThirdPartyService{
      * @param noticeTypeNid
      */
     @Override
-    public void sendEmail(String type,String message,String noticeTypeNid){
+    public void sendEmail(String type,String message,String noticeTypeNid,String lmjEmailAddress){
         try{
-            String emailAddress = systemConfigService.getConfigValue(Constant.LMJ_EMAIL_ADDRESS);
+            String emailAddress = systemConfigService.getConfigValue(lmjEmailAddress);
             noticeService.sendEmail(type, message, noticeTypeNid, emailAddress);
             LOGGER.info("发送邮件成功,type={}",type);
         }catch (Exception e){

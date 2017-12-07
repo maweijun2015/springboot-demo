@@ -50,4 +50,29 @@ public interface SupplyChainLmjService {
      * @param supplyChainLmjParamDTO
      */
     void sendPayTransfer(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
+
+    /**
+     * 乐木几翼支付回调-失败处理
+     * @return
+     */
+    SupplyChainLmjResultDTO getCallbackPayStatusFail(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
+
+    /**
+     * 乐木几翼支付回调-失败处理-重试
+     * @return
+     */
+    SupplyChainLmjResultDTO getCallbackPayStatusFailRetry(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
+
+    /**
+     * 乐木几翼支付回调-处理成功-状态更新
+     * @return
+     */
+    void updateCallbackPayStatusSuccess(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
+
+    /**
+     * 邮件异常通知
+     * @param type
+     * @param message
+     */
+    void sendMail(String type,String message);
 }

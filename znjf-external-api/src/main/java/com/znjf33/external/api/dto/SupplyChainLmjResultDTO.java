@@ -10,6 +10,12 @@ import java.util.Map;
  */
 public class SupplyChainLmjResultDTO implements Serializable {
     private static final long serialVersionUID = 3073451196909322903L;
+
+    /**
+     *
+     */
+    public static final String lmjStatus = "";
+
     /**
      * code
      */
