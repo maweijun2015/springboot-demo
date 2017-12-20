@@ -29,7 +29,7 @@
     </parent>
 
     <properties>
-        <znjf-common.version>1.0.5</znjf-common.version>
+        <znjf-common.version>1.0.6-SNAPSHOT</znjf-common.version>
         <znjf-general.version>1.0.5</znjf-general.version>
         <znjf-useraccount.version>1.0.6</znjf-useraccount.version>
         <znjf-investment.version>1.0.6</znjf-investment.version>
@@ -41,6 +41,7 @@
         <guava.version>19.0</guava.version>
         <fastjson.version>1.2.29</fastjson.version>
         <mybatis-starter.version>1.1.1</mybatis-starter.version>
+        <mybatis.generator.verison>1.3.2</mybatis.generator.verison>
         <druid.version>1.0.24</druid.version>
         <pagehelper.version>4.1.6</pagehelper.version>
         <skipTests>true</skipTests>
@@ -130,6 +131,12 @@
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-core</artifactId>
+                <version>${mybatis.generator.verison}</version>
+                <scope>provided</scope>
             </dependency>
             <!-- 数据库连接池 -->
             <dependency>
