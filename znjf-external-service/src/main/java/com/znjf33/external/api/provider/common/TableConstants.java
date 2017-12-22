@@ -20,4 +20,18 @@ public interface TableConstants {
     Integer ZNJF_FUND_PROCESS_STATUS_ERROR = 12;
     /** 数据来源 - 全网通 */
     Integer ZNJF_FUND_DATA_FROM_LMJ = 1;
+    /** 渠道类型表 - 渠道类型 - 在线充值 */
+    String ZNJF_CHANNEL_TYPE_RECHARGE = "100002";
+    /** 渠道类型表 - 渠道类型 - 提现回调 */
+    String ZNJF_CHANNEL_TYPE_CASH = "100003";
+    /** 渠道类型表 - 渠道类型 - 放款回调 */
+    String ZNJF_CHANNEL_TYPE_VERIFY_FULL = "100006";
+    /** 渠道类型表 - 渠道类型 - 批量债券转让回调 */
+    String ZNJF_CHANNEL_TYPE_BATCH_BOND = "100009";
+    /** 渠道类型表 - 渠道类型 - 还款回调 */
+    String ZNJF_CHANNEL_TYPE_REPAY = "100010";
+    /** 渠道类型表 - 状态 - 待处理 */
+    Integer ZNJF_CHANNEL_TYPE_STATUS_WAIT = 0;
+    /** 异常记录表 - 发送状态 - 不发送 */
+    Integer ZNJF_EXCEPTION_RECORD_SEND_STATUS_NO = 1;
 }

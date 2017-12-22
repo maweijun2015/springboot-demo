@@ -25,4 +25,7 @@ public interface Constant {
     /** 邮件 异常 地址 */
     String EXCEPTION_REMINDER_EMAIL_ADDRESS = "exception_reminder_email_address";
 
+    /** 邮件 异常 消息模版 */
+    String EXCEPTION_REMINDER = "exception_reminder";
+
 }

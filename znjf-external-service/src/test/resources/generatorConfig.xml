@@ -51,7 +51,7 @@
 		</javaClientGenerator>
 		
 		<!-- 用户相关  -->
-		<table tableName="znjf_exception_record" domainObjectName="znjfExceptionRecord"
+		<table tableName="znjf_exception_record" domainObjectName="ZnjfExceptionRecord"
 			   enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
 			<generatedKey column="id" sqlStatement="SELECT count(1) FROM znjf_exception_record"/>
 		</table>

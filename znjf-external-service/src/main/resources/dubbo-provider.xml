@@ -15,4 +15,6 @@
 
     <!-- 声明需要暴露的服务接口 -->
     <dubbo:service interface="com.znjf33.external.api.service.SupplyChainLmjService" ref="supplyChainLmjServiceImpl" retries="0" timeout="80000" owner="mwj"/>
+    <!-- 回调异常统计处理 -->
+    <dubbo:service interface="com.znjf33.external.api.service.CallbackExceptionService" ref="callbackExceptionServiceImpl" retries="0" timeout="80000" owner="mwj"/>
 </beans>
