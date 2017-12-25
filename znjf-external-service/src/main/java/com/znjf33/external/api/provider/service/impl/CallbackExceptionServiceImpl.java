@@ -9,6 +9,7 @@ import com.znjf33.external.api.provider.domain.ZnjfExceptionRecordResultDO;
 import com.znjf33.external.api.provider.mapper.ZnjfExceptionRecordMapper;
 import com.znjf33.external.api.service.CallbackExceptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.concurrent.ConcurrentMap;
  * @description
  * @create 17/12/21
  */
+@Service
 public class CallbackExceptionServiceImpl implements CallbackExceptionService {
 
     @Autowired
