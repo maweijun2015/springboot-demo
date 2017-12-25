@@ -36,7 +36,7 @@ public class CallbackExceptionServiceImpl implements CallbackExceptionService {
      */
     @Override
     public void analyzeExceptionProcess(){
-        List<ZnjfExceptionRecordResultDO> znjfExceptionRecordResultDOList = znjfExceptionRecordMapper.queryByPrimaryKey();
+        List<ZnjfExceptionRecordResultDO> znjfExceptionRecordResultDOList = znjfExceptionRecordMapper.queryByPrimaryKeyAll();
         ConcurrentMap<String,ZnjfExceptionRecordResultDO> mapRecord = new ConcurrentHashMap<>();
         if (znjfExceptionRecordResultDOList != null && znjfExceptionRecordResultDOList.size() != 0){
             for (ZnjfExceptionRecordResultDO znjfExceptionRecordResultDO:znjfExceptionRecordResultDOList){
@@ -62,8 +62,7 @@ public class CallbackExceptionServiceImpl implements CallbackExceptionService {
             return;
         }
         for (ZnjfExceptionRecordResultDO znjfExceptionRecordResultDO:znjfExceptionRecordResultDOList){
-            thirdPartyService.sendEmail("银行没有回调","流水号:"+znjfExceptionRecordResultDO.getTradeNo(),
-                    Constant.EXCEPTION_REMINDER,Constant.EXCEPTION_REMINDER_EMAIL_ADDRESS);
+            thirdPartyService.sendEmailReminder("银行没有回调","流水号:"+znjfExceptionRecordResultDO.getTradeNo());
             znjfExceptionRecordMapper.updateByPrimaryKey(znjfExceptionRecordResultDO.getId(),TableConstants.ZNJF_EXCEPTION_RECORD_STATUS_DEAL);
         }
     }

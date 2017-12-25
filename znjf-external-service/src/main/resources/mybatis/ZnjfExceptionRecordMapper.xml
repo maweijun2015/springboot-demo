@@ -17,9 +17,7 @@
   <!-- 保存异常信息表-->
   <insert id="saveZnjfExceptionRecord" parameterType="java.util.List" useGeneratedKeys="false">
     insert into znjf_exception_record
-    (trade_no, channel_type,status, user_id, msg,
-    add_time
-    )
+      (trade_no, channel_type,status, user_id, msg,add_time)
     values
     <foreach collection="list" item="item" index="index" separator=",">
       (
@@ -27,7 +25,7 @@
       #{item.channelType,jdbcType=VARCHAR},
       #{item.status,jdbcType=VARCHAR},
       #{item.userId,jdbcType=DECIMAL},
-      #{item.msg,jdbcType=DECIMAL},
+      #{item.msg,jdbcType=VARCHAR},
       now()
       )
     </foreach>
@@ -65,5 +63,10 @@
     where status = 0
   </select>
 
+  <!-- 查询所有的异常表数据 -->
+  <select id="queryByPrimaryKeyAll" resultType="com.znjf33.external.api.provider.domain.ZnjfExceptionRecordResultDO" >
+    select id, trade_no as tradeNo, status, add_time as addTime
+    from znjf_exception_record
+  </select>
 
 </mapper>

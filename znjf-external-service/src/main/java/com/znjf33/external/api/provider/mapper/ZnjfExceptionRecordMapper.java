@@ -43,9 +43,15 @@ public interface ZnjfExceptionRecordMapper {
      * @return
      */
     List<ZnjfExceptionRecordResultDO> queryByPrimaryKey();
+
     /**
-     * 查询在线充值当天超过30分钟异常数据
+     * 查询所有的异常表数据
      * @return
      */
-    void saveZnjfExceptionRecord(List item);
+    List<ZnjfExceptionRecordResultDO> queryByPrimaryKeyAll();
+    /**
+     * 保存异常数据
+     * @return
+     */
+    int saveZnjfExceptionRecord(List item);
 }

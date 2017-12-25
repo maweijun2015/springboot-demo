@@ -17,6 +17,13 @@ public interface ThirdPartyService {
     void sendEmail(String type,String message,String noticeTypeNid,String lmjEmailAddress);
 
     /**
+     * 发送异常邮件
+     * @param type
+     * @param message
+     */
+    public void sendEmailReminder(String type,String message);
+
+    /**
      * E签宝签约
      * @param supplyChainLmjParamDTO
      * @return

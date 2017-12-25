@@ -57,6 +57,21 @@ public class ThirdPartyServiceImpl implements ThirdPartyService{
     }
 
     /**
+     * 发送邮件
+     * @param type
+     * @param message
+     */
+    @Override
+    public void sendEmailReminder(String type,String message){
+        try{
+            noticeService.sendEmailReminder(type, message);
+            LOGGER.info("发送邮件成功,type={}",type);
+        }catch (Exception e){
+            LOGGER.error("发送邮件失败,type={}",type);
+        }
+    }
+
+    /**
      * E签宝签约
      * @param supplyChainLmjParamDTO
      * @return
