@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentMap;
 public class CallbackExceptionServiceImpl implements CallbackExceptionService {
 
     @Autowired
-    ZnjfExceptionRecordMapper znjfExceptionRecordMapper;
+    private ZnjfExceptionRecordMapper znjfExceptionRecordMapper;
 
     @Autowired
     private ThirdPartyService thirdPartyService;
