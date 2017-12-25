@@ -3,7 +3,7 @@
 <mapper namespace="com.znjf33.external.api.provider.mapper.ZnjfExceptionRecordMapper" >
   <update id="updateByPrimaryKey" parameterType="java.lang.Integer" >
     update znjf_exception_record
-    set status = #{status,jdbcType=INTEGER},
+    set status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
