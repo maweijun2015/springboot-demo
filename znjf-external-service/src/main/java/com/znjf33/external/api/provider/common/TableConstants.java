@@ -32,6 +32,6 @@ public interface TableConstants {
     String ZNJF_CHANNEL_TYPE_REPAY = "100010";
     /** 渠道类型表 - 状态 - 待处理 */
     Integer ZNJF_CHANNEL_TYPE_STATUS_WAIT = 0;
-    /** 异常记录表 - 发送状态 - 不发送 */
-    Integer ZNJF_EXCEPTION_RECORD_SEND_STATUS_NO = 1;
+    /** 异常记录表 - 状态 - 处理中 */
+    Integer ZNJF_EXCEPTION_RECORD_STATUS_DEAL = 1;
 }

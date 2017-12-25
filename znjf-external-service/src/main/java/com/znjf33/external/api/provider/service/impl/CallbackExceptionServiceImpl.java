@@ -64,7 +64,7 @@ public class CallbackExceptionServiceImpl implements CallbackExceptionService {
         for (ZnjfExceptionRecordResultDO znjfExceptionRecordResultDO:znjfExceptionRecordResultDOList){
             thirdPartyService.sendEmail("银行没有回调","流水号:"+znjfExceptionRecordResultDO.getTradeNo(),
                     Constant.EXCEPTION_REMINDER,Constant.EXCEPTION_REMINDER_EMAIL_ADDRESS);
-            znjfExceptionRecordMapper.updateByPrimaryKey(znjfExceptionRecordResultDO.getId());
+            znjfExceptionRecordMapper.updateByPrimaryKey(znjfExceptionRecordResultDO.getId(),TableConstants.ZNJF_EXCEPTION_RECORD_STATUS_DEAL);
         }
     }
 

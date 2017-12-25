@@ -2,12 +2,13 @@ package com.znjf33.external.api.provider.mapper;
 
 import com.znjf33.external.api.provider.domain.ZnjfExceptionRecordResultDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 @Mapper
 public interface ZnjfExceptionRecordMapper {
-    int updateByPrimaryKey(Integer id);
+    int updateByPrimaryKey(@Param("id") Integer id,@Param("status") Integer status);
     /**
      * 查询在线充值当天超过30分钟异常数据
      * @return
