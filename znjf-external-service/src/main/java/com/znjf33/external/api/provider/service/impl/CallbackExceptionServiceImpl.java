@@ -8,6 +8,7 @@ import com.znjf33.external.api.provider.domain.ZnjfExceptionRecordParamDO;
 import com.znjf33.external.api.provider.domain.ZnjfExceptionRecordResultDO;
 import com.znjf33.external.api.provider.mapper.ZnjfExceptionRecordMapper;
 import com.znjf33.external.api.service.CallbackExceptionService;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
 
 /**
  * @author maweijun
@@ -23,6 +25,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 @Service
 public class CallbackExceptionServiceImpl implements CallbackExceptionService {
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CallbackExceptionServiceImpl.class);
 
     @Autowired
     private ZnjfExceptionRecordMapper znjfExceptionRecordMapper;
@@ -49,6 +52,9 @@ public class CallbackExceptionServiceImpl implements CallbackExceptionService {
         analyzeRePayExceptionRecord(znjfExceptionRecordParamDOList,mapRecord);
         analyzeVerifyFullExceptionRecord(znjfExceptionRecordParamDOList,mapRecord);
         analyzeBondExceptionRecord(znjfExceptionRecordParamDOList,mapRecord);
+        if (znjfExceptionRecordParamDOList == null || znjfExceptionRecordParamDOList.size() == 0){
+            return;
+        }
         znjfExceptionRecordMapper.saveZnjfExceptionRecord(znjfExceptionRecordParamDOList);
     }
 
@@ -62,6 +68,7 @@ public class CallbackExceptionServiceImpl implements CallbackExceptionService {
             return;
         }
         for (ZnjfExceptionRecordResultDO znjfExceptionRecordResultDO:znjfExceptionRecordResultDOList){
+            LOGGER.info("银行没有回调,流水号:{}",znjfExceptionRecordResultDO.getTradeNo());
             thirdPartyService.sendEmailReminder("银行没有回调","流水号:"+znjfExceptionRecordResultDO.getTradeNo());
             znjfExceptionRecordMapper.updateByPrimaryKey(znjfExceptionRecordResultDO.getId(),TableConstants.ZNJF_EXCEPTION_RECORD_STATUS_DEAL);
         }
