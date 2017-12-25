@@ -1,10 +1,11 @@
 package com.znjf33.external.api.provider.mapper;
 
-import com.znjf33.external.api.provider.domain.ZnjfExceptionRecordParamDO;
 import com.znjf33.external.api.provider.domain.ZnjfExceptionRecordResultDO;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface ZnjfExceptionRecordMapper {
     int updateByPrimaryKey(Integer id);
     /**
