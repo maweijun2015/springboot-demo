@@ -53,7 +53,7 @@
   <!-- 查询转让回调异常数据 -->
   <select id="queryBondException" resultType="com.znjf33.external.api.provider.domain.ZnjfExceptionRecordResultDO" >
     select r.uuid as tradeNo,r.creditor as userId from znjf_bond r
-    where (r.bond_status=6 or r.verify_status = 2) and r.update_time &lt; date_add(now(),interval -30 minute)
+    where (r.bond_status=6 or r.verify_status = 2) and r.bond_status != 7  and r.update_time &lt; date_add(now(),interval -30 minute)
   </select>
 
   <!-- 查询待处理的异常表数据 -->
