@@ -118,7 +118,8 @@
 
     <update id="updateZnjfFundStatus">
         update znjf_fund
-        set fund_status = #{fundStatus,jdbcType=DECIMAL}
+        set fund_status = #{fundStatus,jdbcType=DECIMAL},
+        loan_agreement = #{loanAgreement,jdbcType=VARCHAR}
         where buyer_id = #{userId,jdbcType=DECIMAL}
         and order_no = #{loanDrawUuid,jdbcType=VARCHAR}
         AND channel_from = #{channelFrom, jdbcType=DECIMAL}

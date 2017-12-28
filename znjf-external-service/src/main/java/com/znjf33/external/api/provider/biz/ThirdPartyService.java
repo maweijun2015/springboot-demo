@@ -28,5 +28,5 @@ public interface ThirdPartyService {
      * @param supplyChainLmjParamDTO
      * @return
      */
-    boolean signatureFileForLmjSignature(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
+    String signatureFileForLmjSignature(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
 }

@@ -63,7 +63,7 @@ public interface SupplyChainLmjMapper {
      * @param fundStatus
      * @param channelFrom
      */
-    void updateZnjfFundStatus(@Param("userId") Integer userId, @Param("loanDrawUuid") String loanDrawUuid, @Param("fundStatus") Integer fundStatus,@Param("channelFrom") Integer channelFrom);
+    void updateZnjfFundStatus(@Param("userId") Integer userId, @Param("loanDrawUuid") String loanDrawUuid, @Param("fundStatus") Integer fundStatus,@Param("channelFrom") Integer channelFrom, @Param("loanAgreement") String loanAgreement);
     void updateZnjfFundProcessStatus(@Param("userId") Integer userId, @Param("loanDrawUuid") String loanDrawUuid, @Param("processStatus") Integer processStatus,@Param("channelFrom") Integer channelFrom);
 
     /**

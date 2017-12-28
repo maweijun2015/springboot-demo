@@ -206,4 +206,14 @@ public class SupplyChainLmjDaoTest extends JunitBase{
                 TableConstants.MONEY_STATUS_REPAYING);
         Assert.assertTrue(true);
     }
+
+    /**
+     *  更新签约后fund表信息
+     */
+    @Test
+    public void updateZnjfFundStatus(){
+        supplyChainLmjMapper.updateZnjfFundStatus(902,"LMJZY201712281159247170",TableConstants.MONEY_STATUS_PAY,
+                TableConstants.ZNJF_FUND_DATA_FROM_LMJ,"/data/1.pdf");
+        Assert.assertTrue(true);
+    }
 }

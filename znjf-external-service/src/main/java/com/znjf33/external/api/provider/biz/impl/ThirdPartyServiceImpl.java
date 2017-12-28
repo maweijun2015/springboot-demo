@@ -77,7 +77,7 @@ public class ThirdPartyServiceImpl implements ThirdPartyService{
      * @return
      */
     @Override
-    public boolean signatureFileForLmjSignature(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+    public String signatureFileForLmjSignature(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
         String srcFile="";
         String userResult="";
         String platformResult = "";
@@ -107,7 +107,7 @@ public class ThirdPartyServiceImpl implements ThirdPartyService{
             }
         }catch (Exception e){
             LOGGER.error("****************电子签名失败****************",e);
-            return false;
+            return null;
         }finally {
             File file = new File(srcFile);
             if(file.isFile() && file.exists()){
@@ -118,7 +118,7 @@ public class ThirdPartyServiceImpl implements ThirdPartyService{
                 userResultFile.delete();
             }
         }
-        return true;
+        return signResult;
     }
 
 }

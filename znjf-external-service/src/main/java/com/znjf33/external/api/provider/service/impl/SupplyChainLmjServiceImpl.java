@@ -127,11 +127,13 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             LOGGER.info(supplyChainLmjParamDTO.getUserId() + " 签约开始" + supplyChainLmjParamDTO.getLoanDrawUuid());
             getBorrowSigningInfo(supplyChainLmjParamDTO);
             //E签宝签约
-            boolean signatureFileForLmj = thirdPartyService.signatureFileForLmjSignature(supplyChainLmjParamDTO);
-            if (!signatureFileForLmj){
+            String signatureFileForLmj = thirdPartyService.signatureFileForLmjSignature(supplyChainLmjParamDTO);
+            if (signatureFileForLmj == null || "".equals(signatureFileForLmj)){
                 LOGGER.error(supplyChainLmjParamDTO.getLoanDrawUuid() + " 签约失败 signatureFileForLmj == " +signatureFileForLmj);
                 updateZnjfFundProcessStatus(supplyChainLmjParamDTO);
                 return;
+            }else {
+
             }
             LOGGER.info("e签宝签约成功");
             //标的生成
@@ -146,7 +148,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             //状态更新
             LOGGER.info("************更新fund表状态******************");
             supplyChainLmjMapper.updateZnjfFundStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),TableConstants.MONEY_STATUS_PAY,
-                    TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
+                    TableConstants.ZNJF_FUND_DATA_FROM_LMJ,signatureFileForLmj);
             LOGGER.info("状态更新成功,标的生成开始");
             borrowUpdateService.addQuanwangtongBorrow(lmjTransferDto,supplyChainLmjParamDTO.getLoanDrawUuid(), Constants.SUPPLY_CHAIN_CHANNEL_FROM);
             LOGGER.info("标的生成成功");
@@ -154,6 +156,7 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             thirdPartyService.sendEmail("全网通签约",supplyChainLmjParamDTO.getLoanUserRealName(), Constant.LEMUJI_SIGN_REMINDER,Constant.LMJ_EMAIL_ADDRESS);
         }catch (Exception e){
             LOGGER.error(supplyChainLmjParamDTO.getUserId() + " 签约失败" + supplyChainLmjParamDTO.getLoanDrawUuid());
+            LOGGER.error(" 签约失败原因:{}",e.getMessage());
             updateZnjfFundProcessStatus(supplyChainLmjParamDTO);
         }
     }
