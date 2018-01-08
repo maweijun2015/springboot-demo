@@ -88,11 +88,20 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         Float creditAmount = supplyChainLmjMapper.getCreditAmountByUserId(supplyChainLmjParamDO.getUserId());
         //查询信用使用额度
         Float usedCreditAmount = supplyChainLmjMapper.getUsedCreditAmount(supplyChainLmjParamDO.getUserId());
+        //查询佐力使用额度
+        Float usedCreditLines = supplyChainLmjMapper.queryUseLinesByUserId(supplyChainLmjParamDO.getUserId());
 
         BigDecimal creditAmountBig = new BigDecimal(Float.toString(creditAmount));
         BigDecimal usedCreditAmountBig = new BigDecimal(Float.toString(usedCreditAmount));
+        //金服可用额度
         BigDecimal remainingCreditAmount = creditAmountBig.subtract(usedCreditAmountBig);
-
+        //实际可以额度
+        BigDecimal availableLinesBig = remainingCreditAmount.subtract(new BigDecimal(Float.toString(usedCreditLines)));
+        if (availableLinesBig.floatValue() <  supplyChainLmjParamDO.getDrawAmount() &&
+                supplyChainLmjParamDO.getDrawAmount() <= remainingCreditAmount.floatValue()){
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_NO_MATCHING_ZL.code());
+            return supplyChainLmjResultDTO;
+        }
         if (remainingCreditAmount.floatValue() <  supplyChainLmjParamDO.getDrawAmount()){
             supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_NO_MATCHING.code());
             return supplyChainLmjResultDTO;

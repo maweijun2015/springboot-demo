@@ -233,4 +233,9 @@
         select user_id as userId from znjf_external_user z where z.ext_user_id=#{extUserId,jdbcType=DECIMAL}
         and z.ext_user_type=1002 and z.ext_platform = 3000
     </select>
+
+    <select id="queryUseLinesByUserId" resultType="java.lang.Float">
+        select r.use_line from znjf_credit_lines r where r.user_id=#{userId,jdbcType=DECIMAL}
+        and r.credit_from = 1
+    </select>
 </mapper>

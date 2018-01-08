@@ -113,5 +113,10 @@ public interface SupplyChainLmjMapper {
      */
     int updateZnjfCreditLines(@Param("creditLine") Float creditLine, @Param("useLine")Float useLine, @Param("userId")Integer userId, @Param("creditFrom")Integer creditFrom);
 
-
+    /**
+     * 查询佐力已用额度
+     * @param userId
+     * @return
+     */
+    Float queryUseLinesByUserId(@Param("userId") Integer userId);
 }
