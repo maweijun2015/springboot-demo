@@ -176,6 +176,31 @@ public class SupplyChainLmjParamDTO implements Serializable {
      */
     private Map<String,String> params;
 
+    /**
+     * 授信额度
+     */
+    private Float creditLine;
+    /**
+     * 已用额度
+     */
+    private Float useLine;
+
+    public Float getCreditLine() {
+        return creditLine;
+    }
+
+    public void setCreditLine(Float creditLine) {
+        this.creditLine = creditLine;
+    }
+
+    public Float getUseLine() {
+        return useLine;
+    }
+
+    public void setUseLine(Float useLine) {
+        this.useLine = useLine;
+    }
+
     public String getDealHeadNo() {
         return dealHeadNo;
     }

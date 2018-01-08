@@ -219,4 +219,18 @@
         where f.order_no=#{orderNo,jdbcType=VARCHAR}
         and f.channel_from = 1
     </select>
+
+    <!-- 更新授信系统 -->
+    <update id="updateZnjfCreditLines">
+        update znjf_credit_lines
+        set credit_line = #{creditLine,jdbcType=DECIMAL},
+        use_line = #{useLine,jdbcType=DECIMAL}
+        where user_id = #{userId,jdbcType=DECIMAL}
+        and credit_from = #{creditFrom,jdbcType=DECIMAL}
+    </update>
+
+    <select id="getZnjfExternalUserByExtUserId" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
+        select user_id as userId from znjf_external_user z where z.ext_user_id=#{extUserId,jdbcType=DECIMAL}
+        and z.ext_user_type=1002 and z.ext_platform = 3000
+    </select>
 </mapper>

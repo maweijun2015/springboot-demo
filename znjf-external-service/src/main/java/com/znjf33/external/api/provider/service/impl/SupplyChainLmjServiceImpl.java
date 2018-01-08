@@ -366,6 +366,25 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
     }
 
     /**
+     * 乐木几第三方额度授信推送接口
+     * @return
+     */
+    @Override
+    public boolean saveCreditLines(SupplyChainLmjParamDTO supplyChainLmjParamDTO){
+        SupplyChainLmjResultDO supplyChainLmjResultDO = supplyChainLmjMapper.getZnjfExternalUserByExtUserId(supplyChainLmjParamDTO.getMemberId());
+        if (supplyChainLmjResultDO == null){
+            return false;
+        }
+        int count  = supplyChainLmjMapper.updateZnjfCreditLines(supplyChainLmjParamDTO.getCreditLine(),supplyChainLmjParamDTO.getUseLine(),
+                supplyChainLmjResultDO.getUserId(),TableConstants.ZNJF_CREDIT_LINES_FROM_ZL);
+        if (count == 0){
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
      * 翼支付充值接口-重发
      */
     private void callWingToPayChargeFb(SupplyChainLmjParamDTO supplyChainLmjParamDTO,long transactionAmount,String orderNo){

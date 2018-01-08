@@ -216,4 +216,15 @@ public class SupplyChainLmjDaoTest extends JunitBase{
                 TableConstants.ZNJF_FUND_DATA_FROM_LMJ,"/data/1.pdf");
         Assert.assertTrue(true);
     }
+
+    /**
+     *  更新授信表
+     */
+    @Test
+    public void updateZnjfCreditLines(){
+            int a = supplyChainLmjMapper.updateZnjfCreditLines(5000f,300f,
+                    902,TableConstants.ZNJF_CREDIT_LINES_FROM_ZL);
+            Assert.assertTrue(a == 1);
+
+    }
 }

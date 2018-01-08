@@ -101,4 +101,17 @@ public interface SupplyChainLmjMapper {
      */
     SupplyChainLmjResultDO getRepaymentInfo(@Param("orderNo") String orderNo);
 
+    /**
+     * 根据外部用户id查询金服用户id
+     * @param extUserId
+     * @return
+     */
+    SupplyChainLmjResultDO getZnjfExternalUserByExtUserId(@Param("extUserId") Integer extUserId);
+
+    /**
+     * 更新授信系统
+     */
+    int updateZnjfCreditLines(@Param("creditLine") Float creditLine, @Param("useLine")Float useLine, @Param("userId")Integer userId, @Param("creditFrom")Integer creditFrom);
+
+
 }

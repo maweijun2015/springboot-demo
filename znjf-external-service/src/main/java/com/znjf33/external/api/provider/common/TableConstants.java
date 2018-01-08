@@ -34,4 +34,7 @@ public interface TableConstants {
     Integer ZNJF_CHANNEL_TYPE_STATUS_WAIT = 0;
     /** 异常记录表 - 状态 - 处理中 */
     Integer ZNJF_EXCEPTION_RECORD_STATUS_DEAL = 1;
+
+    /** 授信额度表 - 授信来源 - 佐力 */
+    Integer ZNJF_CREDIT_LINES_FROM_ZL = 1;
 }

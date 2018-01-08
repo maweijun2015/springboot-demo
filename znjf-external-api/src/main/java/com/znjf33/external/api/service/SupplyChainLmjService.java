@@ -75,4 +75,9 @@ public interface SupplyChainLmjService {
      * @param message
      */
     void sendMail(String type,String message);
+    /**
+     * 乐木几第三方额度授信推送接口
+     * @return
+     */
+    boolean saveCreditLines(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
 }
