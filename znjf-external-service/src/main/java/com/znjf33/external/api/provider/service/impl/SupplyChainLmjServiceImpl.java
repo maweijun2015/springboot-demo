@@ -106,6 +106,10 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_NO_MATCHING.code());
             return supplyChainLmjResultDTO;
         }
+        if (supplyChainLmjParamDO.getDrawAmount() > 1000000){
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_NO_MATCHING.code());
+            return supplyChainLmjResultDTO;
+        }
         //支用申请信息录入
         supplyChainLmjParamDO.setDealNo(OrderNoUtils.getSerialNumber());
         supplyChainLmjParamDO.setFundStatus(TableConstants.ZNJF_FUND_STATUS_NO_PAY);
@@ -388,6 +392,23 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
                 supplyChainLmjResultDO.getUserId(),TableConstants.ZNJF_CREDIT_LINES_FROM_ZL);
         if (count == 0){
             return false;
+        }
+        //查询信用总额度
+        Float creditAmount = supplyChainLmjMapper.getCreditAmountByUserId(supplyChainLmjResultDO.getUserId());
+        //查询信用使用额度
+        Float usedCreditAmount = supplyChainLmjMapper.getUsedCreditAmount(supplyChainLmjResultDO.getUserId());
+        //查询佐力使用额度
+        Float usedCreditLines = supplyChainLmjMapper.queryUseLinesByUserId(supplyChainLmjResultDO.getUserId());
+        BigDecimal creditAmountBig = new BigDecimal(Float.toString(creditAmount));
+        BigDecimal usedCreditAmountBig = new BigDecimal(Float.toString(usedCreditAmount));
+        //金服可用额度
+        BigDecimal remainingCreditAmount = creditAmountBig.subtract(usedCreditAmountBig);
+        //实际可以额度
+        BigDecimal availableLinesBig = remainingCreditAmount.subtract(new BigDecimal(Float.toString(usedCreditLines)));
+        if (availableLinesBig.floatValue() < 0){
+            //实际可以额度 发送邮件
+            thirdPartyService.sendEmail("全网通额度提醒",supplyChainLmjParamDTO.getLoanUserRealName(),
+                    Constant.LEMUJI_REMINDER,Constant.LMJ_EMAIL_ADDRESS);
         }
         return true;
     }

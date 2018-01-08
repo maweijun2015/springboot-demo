@@ -15,6 +15,9 @@ public interface Constant {
     /** 邮件 异常 消息模版 */
     String LEMUJI_EXCEPTION = "lemuji_exception";
 
+    /** 邮件 全网通通用 消息模版*/
+    String LEMUJI_REMINDER = "lemuji_reminder";
+
     /** 邮件 投资 地址 */
     String LMJ_EMAIL_ADDRESS = "lmj_email_address";
     /**
