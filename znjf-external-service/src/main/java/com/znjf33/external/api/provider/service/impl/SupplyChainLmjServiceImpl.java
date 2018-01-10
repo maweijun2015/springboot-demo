@@ -229,14 +229,19 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             return false;
         }
         String number = supplyChainLmjReimbursementParamDTO.getRepaymentDataDTOList().get(0).getNumber();
+        BigDecimal transactionAmountBig = new BigDecimal(Float.toString(supplyChainLmjReimbursementParamDTO.getRepaymentDataDTOList().get(0).getRepaymentAmount()));
+        BigDecimal transactionBig = new BigDecimal(Double.toString(100));
+
+        Long transactionAmount = transactionAmountBig.multiply(transactionBig).longValue();
+
         //更新还款表第三方每一笔还款唯一编号
         supplyChainLmjMapper.updateBorrowRepayment(znjfLemujiPay.getUserId(),znjfFundBorrow.getBorrowId(),number);
         //还款,翼支付付款到银行卡
         LemujiPayDo pay = getDoToPay(supplyChainLmjReimbursementParamDTO.getLoanDrawUuid(),znjfLemujiPay.getUserId(),"",
-                znjfLemujiPay.getTransactionAmount(), supplyChainLmjReimbursementParamDTO.getQuanwangtongName(),
+                transactionAmount, supplyChainLmjReimbursementParamDTO.getQuanwangtongName(),
                 supplyChainLmjReimbursementParamDTO.getQuanwangtongACCOUNT(),LemujiPayDo.PAY_TYPE_TO_BANKACCOUNT,
                 "项目还款:"+OrderNoUtils.getSerialNumber());
-        Map<String,String> params = getToPayParamsTwo(supplyChainLmjReimbursementParamDTO.getQuanwangtongYizhifuPartnerid(),pay.getTransactionAmount(),
+        Map<String,String> params = getToPayParamsTwo(supplyChainLmjReimbursementParamDTO.getQuanwangtongYizhifuPartnerid(),transactionAmount,
                 pay.getOrderNo(),pay.getTransactionNo());
         pay.setTransactionDesc(JSON.toJSONString(params));
         supplyChainLmjMapper.saveZnjfLemujiPay(pay);
