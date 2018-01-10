@@ -4,7 +4,7 @@
 
     <groupId>com.znjf33</groupId>
     <artifactId>znjf-external</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.6-SNAPSHOT</version>
     <modules>
         <module>znjf-external-api</module>
         <module>znjf-external-service</module>
