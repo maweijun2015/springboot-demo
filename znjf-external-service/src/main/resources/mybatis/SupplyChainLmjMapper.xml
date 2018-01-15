@@ -71,7 +71,7 @@
     </insert>
 
     <select id="getUsedCreditAmount" resultType="java.lang.Float">
-        select IFNULL(sum(amount_applied),0) from znjf_fund where channel_from = 1 and money_status=0 and buyer_id = #{userId,jdbcType=DECIMAL}
+        select IFNULL(sum(amount_applied),0) from znjf_fund where channel_from = 1 and fund_status!=4 and buyer_id = #{userId,jdbcType=DECIMAL}
     </select>
 
     <select id="getZnjfFundByUserId" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
