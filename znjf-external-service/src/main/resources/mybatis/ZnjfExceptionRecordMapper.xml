@@ -58,9 +58,10 @@
 
   <!-- 查询待处理的异常表数据 -->
   <select id="queryByPrimaryKey" resultType="com.znjf33.external.api.provider.domain.ZnjfExceptionRecordResultDO" >
-    select id, trade_no as tradeNo, status, add_time as addTime
-    from znjf_exception_record
-    where status = 0
+    select e.id, e.trade_no as tradeNo, e.status,t.channel_type_name as channelTypeName, e.add_time as addTime
+    from znjf_exception_record e
+    inner join znjf_channel_type t on t.channel_type = e.channel_type
+    where e.status = 0
   </select>
 
   <!-- 查询所有的异常表数据 -->

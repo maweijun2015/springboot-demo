@@ -22,6 +22,10 @@ public class ZnjfExceptionRecordResultDO {
      * 状态
      */
     private Integer status;
+    /**
+     * 渠道名
+     */
+    private String channelTypeName;
 
     /**
      * 处理失败响应信息
@@ -31,6 +35,14 @@ public class ZnjfExceptionRecordResultDO {
      * 添加时间
      */
     private Date addTime;
+
+    public String getChannelTypeName() {
+        return channelTypeName;
+    }
+
+    public void setChannelTypeName(String channelTypeName) {
+        this.channelTypeName = channelTypeName;
+    }
 
     public Integer getId() {
         return id;

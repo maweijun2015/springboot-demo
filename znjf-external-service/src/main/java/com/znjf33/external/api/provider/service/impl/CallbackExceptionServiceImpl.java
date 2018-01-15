@@ -69,7 +69,8 @@ public class CallbackExceptionServiceImpl implements CallbackExceptionService {
         }
         for (ZnjfExceptionRecordResultDO znjfExceptionRecordResultDO:znjfExceptionRecordResultDOList){
             LOGGER.info("银行没有回调,流水号:{}",znjfExceptionRecordResultDO.getTradeNo());
-            thirdPartyService.sendEmailReminder("银行没有回调","流水号:"+znjfExceptionRecordResultDO.getTradeNo());
+            thirdPartyService.sendEmailReminder("银行没有回调","类型:"+znjfExceptionRecordResultDO.getChannelTypeName()+
+                    " ,"+"流水号:"+znjfExceptionRecordResultDO.getTradeNo());
             znjfExceptionRecordMapper.updateByPrimaryKey(znjfExceptionRecordResultDO.getId(),TableConstants.ZNJF_EXCEPTION_RECORD_STATUS_DEAL);
         }
     }
