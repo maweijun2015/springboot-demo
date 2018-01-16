@@ -169,6 +169,8 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         if (availableLinesBig.doubleValue() < supplyChainLmjResultDO.getAmountApplied().doubleValue()){
             return false;
         }
+        supplyChainLmjMapper.updateZnjfFundSigningStatus(supplyChainLmjParamDTO.getUserId(),supplyChainLmjParamDTO.getLoanDrawUuid(),
+                TableConstants.MONEY_STATUS_PAY,TableConstants.ZNJF_FUND_DATA_FROM_LMJ);
         return true;
     }
 

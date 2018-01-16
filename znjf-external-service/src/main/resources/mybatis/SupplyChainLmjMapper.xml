@@ -128,6 +128,14 @@
         AND channel_from = #{channelFrom, jdbcType=DECIMAL}
     </update>
 
+    <update id="updateZnjfFundSigningStatus">
+        update znjf_fund
+        set fund_status = #{fundStatus,jdbcType=DECIMAL}
+        where buyer_id = #{userId,jdbcType=DECIMAL}
+        and order_no = #{loanDrawUuid,jdbcType=VARCHAR}
+        AND channel_from = #{channelFrom, jdbcType=DECIMAL}
+    </update>
+
     <select id="countFundsToday" resultType="java.lang.Integer">
         SELECT count(1) FROM znjf_fund f
         WHERE f.buyer_id = #{userId, jdbcType=DECIMAL}
