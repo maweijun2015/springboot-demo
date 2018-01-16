@@ -238,4 +238,11 @@
         select r.use_line from znjf_credit_lines r where r.user_id=#{userId,jdbcType=DECIMAL}
         and r.credit_from = 1
     </select>
+
+    <select id="queryDateLimitByUserId" resultType="java.lang.Integer">
+        select count(1) from znjf_credit_lines r where r.user_id=#{userId,jdbcType=DECIMAL}
+        and r.credit_from = 1
+        and now() >= r.credit_begin_date
+        and r.credit_end_date > now()
+    </select>
 </mapper>

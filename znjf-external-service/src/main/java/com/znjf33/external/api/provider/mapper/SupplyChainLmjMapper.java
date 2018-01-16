@@ -30,6 +30,8 @@ public interface SupplyChainLmjMapper {
     Integer getFundExist(@Param("userId") Integer userId, @Param("loanDrawUuid") String loanDrawUuid);
     Integer getZnjfFundForSame(@Param("loanDrawUuid") String loanDrawUuid);
 
+    Integer queryDateLimitByUserId(@Param("userId") Integer userId);
+
     /**
      * 更新还款表第三方编码
      *

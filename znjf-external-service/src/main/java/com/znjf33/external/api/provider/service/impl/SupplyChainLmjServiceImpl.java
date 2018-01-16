@@ -71,6 +71,13 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
             supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_REFUSED_APPLY.code());
             return supplyChainLmjResultDTO;
         }
+        //期限判断
+        Integer queryDateLimitByUserId = supplyChainLmjMapper.queryDateLimitByUserId(supplyChainLmjResultDO.getUserId());
+        if (queryDateLimitByUserId <= 0){
+            supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_REFUSED_APPLY_TIME_OUT.code());
+            return supplyChainLmjResultDTO;
+        }
+
         Integer znjfFundForSame = supplyChainLmjMapper.getZnjfFundForSame(supplyChainLmjParamDO.getLoanDrawUuid());
         if (znjfFundForSame > 0){
             supplyChainLmjResultDTO.setCode(Message.ERROR_OPEN_LINES_REFUSED_APPLY.code());
@@ -90,6 +97,8 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         Float usedCreditAmount = supplyChainLmjMapper.getUsedCreditAmount(supplyChainLmjParamDO.getUserId());
         //查询佐力使用额度
         Float usedCreditLines = supplyChainLmjMapper.queryUseLinesByUserId(supplyChainLmjParamDO.getUserId());
+
+        LOGGER.info("信用总额度={},信用使用额度={},佐力使用额度={}",creditAmount,usedCreditAmount,usedCreditLines);
 
         BigDecimal creditAmountBig = new BigDecimal(Float.toString(creditAmount));
         BigDecimal usedCreditAmountBig = new BigDecimal(Float.toString(usedCreditAmount));
