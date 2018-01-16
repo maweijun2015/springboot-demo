@@ -80,4 +80,11 @@ public interface SupplyChainLmjService {
      * @return
      */
     boolean saveCreditLines(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
+
+    /**
+     * 查询实际可用额度
+     * @param supplyChainLmjParamDTO
+     * @return
+     */
+    boolean querySigningCredit(SupplyChainLmjParamDTO supplyChainLmjParamDTO);
 }

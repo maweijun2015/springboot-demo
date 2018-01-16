@@ -17,7 +17,7 @@
         select count(1) from rd_user where user_id = #{userId,jdbcType=DECIMAL}
     </select>
 
-    <select id="getCreditAmountByUserId" resultType="java.lang.Float">
+    <select id="getCreditAmountByUserId" resultType="java.lang.Double">
         select r.credit_amount as creditAmount from rd_user_cache r where r.user_id=#{userId,jdbcType=DECIMAL}
     </select>
 
@@ -70,8 +70,11 @@
         </foreach>
     </insert>
 
-    <select id="getUsedCreditAmount" resultType="java.lang.Float">
-        select IFNULL(sum(amount_applied),0) from znjf_fund where channel_from = 1 and fund_status!=4 and buyer_id = #{userId,jdbcType=DECIMAL}
+    <select id="getUsedCreditAmount" resultType="java.lang.Double">
+        select IFNULL(sum(amount_applied),0) from znjf_fund where channel_from = 1
+        and fund_status!=4
+        and fund_status!=-1
+        and buyer_id = #{userId,jdbcType=DECIMAL}
     </select>
 
     <select id="getZnjfFundByUserId" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
@@ -234,7 +237,7 @@
         and z.ext_user_type=1002 and z.ext_platform = 3000
     </select>
 
-    <select id="queryUseLinesByUserId" resultType="java.lang.Float">
+    <select id="queryUseLinesByUserId" resultType="java.lang.Double">
         select r.use_line from znjf_credit_lines r where r.user_id=#{userId,jdbcType=DECIMAL}
         and r.credit_from = 1
     </select>

@@ -103,7 +103,7 @@ public class SupplyChainLmjParamDTO implements Serializable {
     /**
      * 支用申请金额
      */
-    private Float drawAmount;
+    private Double drawAmount;
     /**
      * 分期数，随借随还业务为0
      */
@@ -466,11 +466,11 @@ public class SupplyChainLmjParamDTO implements Serializable {
         this.memberNo = memberNo;
     }
 
-    public Float getDrawAmount() {
+    public Double getDrawAmount() {
         return drawAmount;
     }
 
-    public void setDrawAmount(Float drawAmount) {
+    public void setDrawAmount(Double drawAmount) {
         this.drawAmount = drawAmount;
     }
 

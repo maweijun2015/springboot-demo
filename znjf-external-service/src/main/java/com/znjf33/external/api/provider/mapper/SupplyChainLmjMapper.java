@@ -18,8 +18,8 @@ import org.apache.ibatis.annotations.Param;
 public interface SupplyChainLmjMapper {
 
     SupplyChainLmjResultDO getZnjfExternalUserByUserIdAndUuid(@Param("userId") Integer userId, @Param("loanAppUuid") String loanAppUuid);
-    Float getCreditAmountByUserId(@Param("userId") Integer userId);
-    Float getUsedCreditAmount(@Param("userId") Integer userId);
+    Double getCreditAmountByUserId(@Param("userId") Integer userId);
+    Double getUsedCreditAmount(@Param("userId") Integer userId);
     void saveApplyLoan(SupplyChainLmjParamDO supplyChainLmjParamDO);
     void saveApplyLoanAttachment(List item);
     Integer countUserByUserInfo(@Param("userId") Integer userId);
@@ -120,5 +120,5 @@ public interface SupplyChainLmjMapper {
      * @param userId
      * @return
      */
-    Float queryUseLinesByUserId(@Param("userId") Integer userId);
+    Double queryUseLinesByUserId(@Param("userId") Integer userId);
 }
