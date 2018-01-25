@@ -247,7 +247,9 @@
     </update>
 
     <select id="getZnjfExternalUserByExtUserId" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
-        select user_id as userId from znjf_external_user z where z.ext_user_id=#{extUserId,jdbcType=DECIMAL}
+        select user_id as userId,u.real_name as realName from znjf_external_user z
+        inner join rd_user u on u.user_id = z.user_id
+        where z.ext_user_id=#{extUserId,jdbcType=DECIMAL}
         and z.ext_user_type=1002 and z.ext_platform = 3000
     </select>
 

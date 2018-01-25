@@ -456,7 +456,8 @@ public class SupplyChainLmjServiceImpl implements SupplyChainLmjService {
         BigDecimal availableLinesBig = remainingCreditAmount.subtract(new BigDecimal(Double.toString(usedCreditLines)));
         if (availableLinesBig.doubleValue() < 0){
             //实际可以额度 发送邮件
-            thirdPartyService.sendEmail("全网通额度提醒",supplyChainLmjParamDTO.getLoanUserRealName(),
+
+            thirdPartyService.sendEmail("全网通额度提醒",supplyChainLmjResultDO.getRealName()+"实际额度小于零",
                     Constant.LEMUJI_REMINDER,Constant.LMJ_EMAIL_ADDRESS);
         }
         return true;
