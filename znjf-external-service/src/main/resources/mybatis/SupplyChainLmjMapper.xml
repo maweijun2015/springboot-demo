@@ -71,10 +71,16 @@
     </insert>
 
     <select id="getUsedCreditAmount" resultType="java.lang.Double">
-        select IFNULL(sum(amount_applied),0) from znjf_fund where channel_from = 1
-        and fund_status!=4
-        and fund_status!=-1
-        and buyer_id = #{userId,jdbcType=DECIMAL}
+        select IFNULL(sum(distinctive_borrows.account),0)
+        from (
+		select  distinct borrows_unionized.*
+		from (
+			select rb.* from rd_borrow rb
+			inner join znjf_borrow_role_info bri on bri.borrow_id = rb.id
+			inner join znjf_buz_role br on bri.buz_role_id = br.id
+			where bri.org_user_id= #{userId,jdbcType=DECIMAL} and rb.status in (1,3,6,7,8) and br.buz_role_code in ('FINANCING', 'GUARANTOR','TRANSFEROR_ASSETS')
+		 ) borrows_unionized
+        ) distinctive_borrows
     </select>
 
     <select id="getZnjfFundByUserId" resultType="com.znjf33.external.api.provider.domain.SupplyChainLmjResultDO">
