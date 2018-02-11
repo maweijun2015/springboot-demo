@@ -2,24 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.znjf33</groupId>
-    <artifactId>znjf-external</artifactId>
-    <version>1.0.8-SNAPSHOT</version>
+    <groupId>com.maweijun</groupId>
+    <artifactId>springboot-demo</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <modules>
-        <module>znjf-external-api</module>
-        <module>znjf-external-service</module>
+        <module>springboot-demo-api</module>
+        <module>springboot-demo-service</module>
     </modules>
     <packaging>pom</packaging>
 
-    <name>znjf-external</name>
-    <description>znjf33 external project</description>
-
-    <scm>
-        <url>http://172.16.33.20/znjf/znjf-external</url>
-        <connection>scm:git:http://172.16.33.20/znjf/znjf-external.git</connection>
-        <developerConnection>scm:git:http://172.16.33.20/znjf/znjf-external.git</developerConnection>
-        <tag>znjf_feature_signing</tag>
-    </scm>
+    <name>springboot-demo</name>
+    <description>springboot-demo project</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -29,10 +22,6 @@
     </parent>
 
     <properties>
-        <znjf-common.version>1.0.7</znjf-common.version>
-        <znjf-general.version>1.0.5</znjf-general.version>
-        <znjf-useraccount.version>1.0.6</znjf-useraccount.version>
-        <znjf-investment.version>1.0.6</znjf-investment.version>
         <zookeeper.version>3.4.8</zookeeper.version>
         <dubbo-springboot.version>1.0.0</dubbo-springboot.version>
         <dubbo.version>2.8.4</dubbo.version>
@@ -50,43 +39,11 @@
     <dependencyManagement>
 
         <dependencies>
-            <!--内部子系统-->
             <dependency>
-                <groupId>com.znjf33</groupId>
-                <artifactId>znjf-external-api</artifactId>
+                <groupId>com.maweijun</groupId>
+                <artifactId>springboot-demo-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.znjf33</groupId>
-                <artifactId>znjf-useraccount-api</artifactId>
-                <version>${znjf-useraccount.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.znjf33</groupId>
-                <artifactId>znjf-general-api</artifactId>
-                <version>${znjf-general.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.znjf33</groupId>
-                <artifactId>znjf-investment-api</artifactId>
-                <version>${znjf-investment.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.znjf33</groupId>
-                <artifactId>znjf-common-utils</artifactId>
-                <version>${znjf-common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.znjf33</groupId>
-                <artifactId>znjf-common-web</artifactId>
-                <version>${znjf-common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.znjf33</groupId>
-                <artifactId>znjf-common-service</artifactId>
-                <version>${znjf-common.version}</version>
-            </dependency>
-            <!--内部子系统 end-->
             <!-- springboot -->
             <dependency>
                 <groupId>io.dubbo.springboot</groupId>
@@ -152,17 +109,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <distributionManagement>
-        <repository>
-            <id>nexus-release</id>
-            <url>http://172.16.33.211:8081/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>http://172.16.33.211:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+    
 
     <profiles>
         <profile>

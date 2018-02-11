@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: springboot-demo-provider
+  profiles:
+    active: '@profileActive@'
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mybatis/*.xml
+  typeAliasesPackage: com.maweijun

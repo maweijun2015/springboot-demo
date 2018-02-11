@@ -1,3 +1,3 @@
-## znjf-external
-外部业务子项目
+## springboot-demo
+demo项目
 
